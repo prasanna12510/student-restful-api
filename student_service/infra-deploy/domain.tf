@@ -1,5 +1,5 @@
 data "aws_route53_zone" "dns_zone" {
-  name         = "${var.certificate_domain_name}." # Notice the dot!!!
+  name         = "${var.hosted_zone_name}." # Notice the dot!!!
   private_zone = false
 }
 
