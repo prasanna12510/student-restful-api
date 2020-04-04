@@ -1,0 +1,20 @@
+--- # playbook to create and update the AWS ssm param store for all SecureString variables
+- hosts: localhost
+  connection: local
+
+  pre_tasks:
+    - name: Load variables for the particular environment
+      include_vars: "{{ item }}"
+      no_log: true
+      with_items:
+        - "vars/{{env}}/secrets.yml"
+  tasks:
+    - name: Always update a parameter store value and create a new version
+      aws_ssm_parameter_store:
+        name: "{{item.Name}}"
+        description: "{{item.Description}}"
+        string_type: "{{item.Type}}"
+        value: "{{item.Value}}"
+        overwrite_value: "always"
+      no_log: true
+      with_items: "{{envs}}"

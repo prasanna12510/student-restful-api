@@ -11,11 +11,7 @@ locals {
     version      = var.tag
   }
 
-
-  cloudsre-hello-world-app-vpc = data.terraform_remote_state.cloudsre-hello-world-app_infra_state.outputs.vpc_id
-
   //cloudwatch monitoring and alarm
-  ecs_service_name =
   ecs_dimensions_map = {
     ClusterName = local.cluster_name
     ServiceName = module.cloudsre-hello-world-app-ecs-service.ecs_service
