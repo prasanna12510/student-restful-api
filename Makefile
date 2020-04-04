@@ -64,7 +64,7 @@ terraform-destroy: terraform-destroy-check
 	for TF_FILE_PATH in $(TF_FILE_PATHS); \
 	do \
 		cd $$CWD/student_service/$$TF_FILE_PATH; \
-		sed -i -e "s/TF_CLOUD_TOKEN/$(TF_CLOUD_TOKEN)/g" *.tf;
+		sed -i -e "s/TF_CLOUD_TOKEN/$(TF_CLOUD_TOKEN)/g" *.tf; \
 		$(TERRAFORM) init -input=false; \
 		$(TERRAFORM) plan -destroy -input=false; \
 		$(TERRAFORM) destroy -input=false -auto-approve; \
