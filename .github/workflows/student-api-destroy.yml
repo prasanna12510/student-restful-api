@@ -13,8 +13,9 @@ jobs:
       - name: Get the latest terraform version
         run: make terraform-install
 
-      - name: Destroy student-api infra and code
+      - name: Destroy student-api infra-deploy
         run: make terraform-destroy
+        working-directory: student_service/infra-deploy/
         env:
           TF_IN_AUTOMATION: true
           TF_WORKSPACE: play

@@ -1,17 +1,17 @@
 data "aws_route53_zone" "zone" {
-  name         = "${var.hosted_zone_name}"
+  name         = var.hosted_zone_name
   private_zone = "false"
 }
 
 resource "aws_acm_certificate" "this" {
-  domain_name       = "${var.domain_name}"
+  domain_name       = var.domain_name
   validation_method = "DNS"
 
   tags = {
-    Name          = "${var.certificate_name}"
-    ProductDomain = "${var.product_domain}"
-    Environment   = "${var.environment}"
-    Description   = "${var.description}"
+    Name          = var.certificate_name
+    ProductDomain = var.product_domain
+    Environment   = var.environment
+    Description   = var.description
     ManagedBy     = "terraform"
   }
 
