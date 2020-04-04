@@ -24,7 +24,7 @@ jobs:
 
       - name: Apply terraform student infra
         run: make terraform-apply
-        working-directory: services/student_service/infra-deploy/
+        working-directory: student_service/infra-deploy/
         env:
           TF_IN_AUTOMATION           : true
           TF_WORKSPACE               : play
