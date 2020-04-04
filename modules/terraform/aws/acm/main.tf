@@ -14,6 +14,10 @@ resource "aws_acm_certificate" "this" {
     Description   = "${var.description}"
     ManagedBy     = "terraform"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route53_record" "this" {
@@ -22,6 +26,9 @@ resource "aws_route53_record" "this" {
   zone_id = "${data.aws_route53_zone.zone.id}"
   records = ["${aws_acm_certificate.this.domain_validation_options.0.resource_record_value}"]
   ttl     = 60
+  allow_overwrite = var.validation_allow_overwrite_records
+
+  depends_on = [aws_acm_certificate.this]
 }
 
 resource "aws_acm_certificate_validation" "dns_validation" {
