@@ -21,4 +21,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_KEY }}
           TF_CLOUD_TOKEN: ${{ secrets.TF_CLOUD_TOKEN }}
-          TF_FILE_PATHS: "code-deploy infra-deploy"
+          TF_FILE_PATHS: "infra-deploy"

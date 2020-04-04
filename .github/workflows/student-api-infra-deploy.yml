@@ -22,7 +22,7 @@ jobs:
       - name: Get the latest terraform version
         run: make terraform-install
 
-      - name: Apply terraform student infra
+      - name: Apply terraform student-api infra
         run: make terraform-apply
         working-directory: student_service/infra-deploy/
         env:
