@@ -5,7 +5,7 @@ APP_TAG		  := $(shell git rev-parse HEAD | cut -c1-7)
 .PHONY: terraform-setup-check
 terraform-setup-check:
 
-ifndef TF_TOKEN_CLOUD_SRE
+ifndef TF_CLOUD_TOKEN
 	$(error TF_CLOUD_TOKEN is undefined)
 endif
 
