@@ -6,7 +6,6 @@ locals {
   private_subnets     = "${split(",", var.env[terraform.workspace].cidrs_private)}"
   public_subnets      = "${split(",", var.env[terraform.workspace].cidrs_public)}"
   max_subnet_length   = max(length(local.private_subnets), )
-  domainname          = var.env[terraform.workspace].domain_name
 
   tags = {
     service_name = var.service_name
@@ -49,7 +48,6 @@ locals {
     dmesg      = "${local.name}/var/log/dmesg"
     ecs-init   = "${local.name}/var/log/ecs/ecs-init.log"
     ecs-agent  = "${local.name}/var/log/ecs/ecs-agent.log"
-    metricbeat = "${local.name}-metricbeat-logs"
     audit      = "${local.name}/var/log/ecs/audit.log"
     messages   = "${local.name}/var/log/messages"
   }

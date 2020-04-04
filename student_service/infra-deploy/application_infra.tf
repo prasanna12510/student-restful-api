@@ -64,7 +64,7 @@ module "alb_listener_https" {
   https_tcp_listeners       = local.https_tcp_listeners
   https_tcp_listeners_count = length(local.https_tcp_listeners)
   ssl_policy                = "ELBSecurityPolicy-2016-08"
-  certificate_arn           = module.aws_ssl_certs.acm_certificate_arn
+  certificate_arn           = module.acm.acm_certificate_arn
 }
 
 module "aws_monitoring_log_group" {

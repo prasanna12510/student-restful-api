@@ -1,4 +1,9 @@
 output "acm_certificate_arn" {
-  description = "The ARN of the certificate"
-  value       = concat(aws_acm_certificate.main.*.arn, [""])[0]
+  description = "arn of acm certificate"
+  value       = "${aws_acm_certificate.this.arn}"
+}
+
+output "acm_certificate_dns_validation_record" {
+  description = "record which is used to validate acm certificate"
+  value       = "${aws_route53_record.this.name}"
 }

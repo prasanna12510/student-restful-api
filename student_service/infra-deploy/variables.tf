@@ -9,7 +9,6 @@ variable "env" {
       cidrs_public         = "192.168.0.0/28,192.168.0.16/28,192.168.0.32/28"
       cidrs_private        = "192.168.0.48/28,192.168.0.64/28,192.168.0.80/28"
       cidrs_elasticache    = "192.168.0.96/28,192.168.0.112/28,192.168.0.128/28"
-      domain_name          = "play-hooq.tv"
       ec2_root_volume_size = "20"
       ec2_instance_type    = "t3.medium"
 
@@ -181,16 +180,12 @@ variable "tag" {
 }
 
 #route53 variables
-variable "hosted_zone" {
+variable "hosted_zone_name" {
   default = "play-hooq.tv"
 }
 
-variable "domain_name" {
-  default = ["*.play-hooq.tv"]
-}
-
-variable "subject_alternative_names" {
-  default = ["play-hooq.tv"]
+variable "certificate_domain_name" {
+  default = "*.play-hooq.tv"
 }
 
 #s3 alb logs

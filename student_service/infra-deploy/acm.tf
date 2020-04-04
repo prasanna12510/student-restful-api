@@ -1,18 +1,14 @@
-# retrive the zone_id in current aws account
-data "aws_route53_zone" "main" {
-  name = var.hosted_zone
-  private_zone = false
-}
 
-module "aws_ssl_certs" {
-  source = "../../modules/terraform/aws/acm"
-  domainname = var.domain_name
-  zone_id  = data.aws_route53_zone.main.zone_id
-  subject_alternative_names = var.subject_alternative_names
-  wait_for_validation = true # false
-  tags = local.tags
+module "acm" {
+  source           = "../../modules/terraform/aws/acm"
+  domain_name      = var.certificate_domain_name
+  hosted_zone_name = var.hosted_zone_name
+  certificate_name = "wildcard.${var.hosted_zone_name}"
+  environment      = "play"
+  description      = "Wildcard certificate for example.play-hooq.tv"
+  product_domain   = "student-api"
 }
 
 output "acm_cert_arn" {
-  value = module.aws_ssl_certs.acm_certificate_arn
+  value = module.acm.acm_certificate_arn
 }
