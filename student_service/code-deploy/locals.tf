@@ -13,8 +13,8 @@ locals {
 
   //cloudwatch monitoring and alarm
   ecs_dimensions_map = {
-    ClusterName = local.cluster_name
-    ServiceName = module.cloudsre-hello-world-app-ecs-service.ecs_service
+    ClusterName = data.terraform_remote_state.student-service_infra_state.outputs.ecs_cluster_name
+    ServiceName = module.student-api-ecs-service.ecs_service
   }
 }
 
@@ -23,7 +23,7 @@ locals {
   container_port  = 8080
   container_image = "prasanna1994/student-api:${var.tag}"
   aws_account_id  = data.aws_caller_identity.current.account_id
-  container_environment_vars = [
+  container_secrets = [
     {
       name      = "NAME"
       valueFrom = "arn:aws:ssm:${var.region}:${local.aws_account_id}:parameter/app/student-service/NAME"
@@ -65,7 +65,7 @@ locals {
   ecs_load_balancers = [{
     container_name   = var.container_name
     container_port   = local.container_port
-    target_group_arn = local.alb_targetgroups_arns
+    target_group_arn = data.terraform_remote_state.student-service_infra_state.outputs.alb_targetgroups_arns
 
   }]
 

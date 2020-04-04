@@ -10,19 +10,21 @@ data "aws_ami" "aws_optimized_ecs" {
     name   = "architecture"
     values = ["x86_64"]
   }
-  
+
   owners = ["amazon"]
 }
 
+data "aws_elb_service_account" "main" {}
+
 module "ecs_cluster" {
-  source = "../../../modules/terraform/aws/ecs/cluster"
+  source = "../../modules/terraform/aws/ecs/cluster"
   name   = local.name
   vpc_id = module.vpc.vpc_id
   tags   = local.tags
 }
 
 module "alb_targetgroups" {
-  source        = "../../../modules/terraform/aws/loadbalancer/alb_targetgroup"
+  source        = "../../modules/terraform/aws/loadbalancer/alb_targetgroup"
   vpc_id        = module.vpc.vpc_id
   name          = local.name
   tags          = local.tags
@@ -30,28 +32,28 @@ module "alb_targetgroups" {
 }
 
 module "alb" {
-  source          = "../../../modules/terraform/aws/loadbalancer/alb"
+  source          = "../../modules/terraform/aws/loadbalancer/alb"
   vpc_id          = module.vpc.vpc_id
   security_groups = module.alb_sg.sg_id
   name            = local.name
   lb_name         = local.name
   tags            = local.tags
-  subnets         = "${module.external_subnets.subnet_ids}"
+  subnets         = "${module.public_subnets.subnet_ids}"
   is_internal     = "false"
   environment     = terraform.workspace
   service         = var.service_name
   create_alb      = "true"
-  log_bucket_name = local.alb_s3_bucket_name
+  log_bucket_name = module.alb_accesslogs_s3_bucket.bucket_id
 }
 
 module "alb_listener_http" {
-  source             = "../../../modules/terraform/aws/loadbalancer/alb_listeners/http"
+  source             = "../../modules/terraform/aws/loadbalancer/alb_listeners/http"
   alb_arn            = module.alb.alb_arn
   http_tcp_listeners = local.http_tcp_listeners
 }
 
 module "alb_listener_https" {
-  source                    = "../../../modules/terraform/aws/loadbalancer/alb_listeners/https"
+  source                    = "../../modules/terraform/aws/loadbalancer/alb_listeners/https"
   vpc_id                    = module.vpc.vpc_id
   name                      = local.name
   alb_arn                   = module.alb.alb_arn
@@ -66,14 +68,14 @@ module "alb_listener_https" {
 }
 
 module "aws_monitoring_log_group" {
-  source            = "../../../modules/terraform/aws/cloudwatch/log_group"
+  source            = "../../modules/terraform/aws/cloudwatch/log_group"
   log_groups        = local.log_name_map
   retention_in_days = 180
   tags              = local.tags
 }
 
 module "launch_configuration" {
-  source                          = "../../../modules/terraform/aws/autoscaling/launch_configuration"
+  source                          = "../../modules/terraform/aws/autoscaling/launch_configuration"
   name                            = local.name
   instance_type                   = local.ec2_instance_type
   security_groups                 = module.autoscalinggroup_sg.sg_id
@@ -89,11 +91,11 @@ module "launch_configuration" {
   volume_type                     = "gp2"
 }
 
-
+#autoscaling_group
 module "autoscaling_group" {
-  source                    = "../../../modules/terraform/aws/autoscaling/autoscaling_group_alb"
+  source                    = "../../modules/terraform/aws/autoscaling/autoscaling_group_alb"
   launch_config_name        = module.launch_configuration.launch_configuration_name
-  vpc                       = "${module.internal_private_subnets.subnet_ids}"
+  vpc                       = "${module.private_subnets.subnet_ids}"
   target_group_arn          = module.alb_targetgroups.target_group_arns
   max_size                  = 3
   min_size                  = 1
@@ -107,10 +109,10 @@ module "autoscaling_group" {
   default_cooldown          = "60"
 }
 
-
+#autoscaling policy
 module "asg_autoscaling_policy_scale_up" {
   name                     = "${module.autoscaling_group.aws_asg_name}-instances-scale-up"
-  source                   = "../../../modules/terraform/aws/autoscaling/autoscaling_policy/ec2_scaling"
+  source                   = "../../modules/terraform/aws/autoscaling/autoscaling_policy/ec2_scaling"
   scaling_adjust           = 1
   cooldown                 = 300
   asg_name                 = module.autoscaling_group.aws_asg_name
@@ -119,16 +121,16 @@ module "asg_autoscaling_policy_scale_up" {
 
 module "asg_autoscaling_policy_scale_down" {
   name                     = "${module.autoscaling_group.aws_asg_name}-instances-scale-down"
-  source                   = "../../../modules/terraform/aws/autoscaling/autoscaling_policy/ec2_scaling"
+  source                   = "../../modules/terraform/aws/autoscaling/autoscaling_policy/ec2_scaling"
   scaling_adjust           = -1
   cooldown                 = 300
   asg_name                 = module.autoscaling_group.aws_asg_name
   adjustment_type          = "ChangeInCapacity"
 }
 
-
+#cloudwatch alarms for trigger autoscaling
 module "cloudwatch_alarm_ec2_scaleup" {
-  source                    = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source                    = "../../modules/terraform/aws/cloudwatch/alarm"
   create_metric_alarm       = true
   evaluation_periods  = 1
   period              = "60"
@@ -145,7 +147,7 @@ module "cloudwatch_alarm_ec2_scaleup" {
 }
 
 module "cloudwatch_alarm_ec2_scaledown" {
-  source              = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source              = "../../modules/terraform/aws/cloudwatch/alarm"
   create_metric_alarm = true
   evaluation_periods  = 1
   period              = "60"
@@ -159,6 +161,39 @@ module "cloudwatch_alarm_ec2_scaledown" {
   alarm_name          = "${module.ecs_cluster.ecs_cluster_name}-instances-CPU-Utilization-Below-30"
   dimensions          = local.asg_dimensions_map
 
+}
+#alb s3 logs
+module "alb_accesslogs_s3_bucket" {
+  source = "../../modules/terraform/aws/s3/bucket"
+  name          = var.alb_accesslogs_bucket
+  acl           = var.acl
+  force_destroy = var.force-destroy
+  tags          = local.tags
+  versioning = {
+    enabled = var.versioning
+  }
+  s3_tags = {
+    Name = var.alb_accesslogs_bucket
+  }
+  policy = <<EOF
+{
+      "Version": "2012-10-17",
+      "Statement": [
+          {
+              "Effect": "Allow",
+              "Action": [
+                "s3:PutObject"
+              ],
+              "Resource": "arn:aws:s3:::${var.alb_accesslogs_bucket}/*",
+              "Principal": {
+                "AWS": [
+                  "${data.aws_elb_service_account.main.arn}"
+                ]
+              }
+          }
+      ]
+  }
+EOF
 }
 
 ########################################################  OUTPUTS #######################################################

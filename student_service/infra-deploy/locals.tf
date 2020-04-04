@@ -43,7 +43,6 @@ locals {
   #TODO We have to add ACM(AMAZON CERTIFICATE MANAGER) to add HTTPS listeners cert_arn ssl_policy etc...
   ec2_root_volume_size = var.env[terraform.workspace].ec2_root_volume_size
   ec2_instance_type    = var.env[terraform.workspace].ec2_instance_type
-  alb_s3_bucket_name   = var.env[terraform.workspace].alb_s3_bucket_name
   log_name_map = {
     docker     = "${local.name}/var/log/docker"
     monitoring = "${local.name}-logs"

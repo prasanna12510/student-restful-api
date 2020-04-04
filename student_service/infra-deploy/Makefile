@@ -1,4 +1,5 @@
 TERRAFORM		:= /usr/bin/terraform
+APP_TAG		  := $(shell git rev-parse HEAD | cut -c1-7)
 
 ## check for environment variables to replace tokens
 .PHONY: terraform-setup-check
@@ -22,6 +23,7 @@ endif
 
 .PHONY: terraform-setup
 terraform-setup: terraform-setup-check
+	sed -i -e "s/APP_TAG/${APP_TAG}/g" *.tf
 	sed -i -e "s/TF_CLOUD_TOKEN/${TF_CLOUD_TOKEN}/g" *.tf
 
 

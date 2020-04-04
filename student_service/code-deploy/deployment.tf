@@ -24,7 +24,6 @@ module "student-api-task-definition" {
   secrets                      = local.container_secrets
   port_mappings                = var.port_mappings
   log_configuration            = local.log_configuration
-  repository_credentials       = local.repository_credentials
   ulimits                      = var.ulimits
   ecs_task_role                = data.terraform_remote_state.student-service_infra_state.outputs.ecs_task_role_arn
   ecs_task_execution_role      = data.terraform_remote_state.student-service_infra_state.outputs.ecs_task_execution_role_arn
@@ -53,7 +52,7 @@ module "student-api-ecs-service-autoscaling" {
   max_capacity                 = local.max_capacity
   role_arn                     = data.terraform_remote_state.student-service_infra_state.outputs.ecs_service_role_arn
   cluster_name                 = data.terraform_remote_state.student-service_infra_state.outputs.ecs_cluster_name
-  service_name                 = ecs_service_name
+  service_name                 = module.student-api-ecs-service.ecs_service
   adjustment_type              = var.autoscaling_policy_adjustment_type
   metric_aggregation_type      = var.autoscaling_policy_metric_aggregation_type
   scaleup_policy_name          = "${module.student-api-ecs-service.ecs_service}-scale-up"
@@ -67,7 +66,7 @@ module "student-api-ecs-service-autoscaling" {
 
 ### ECS service cloudwatch_alarm for scaleup actions
 module "cloudwatch_alarm_ecs_service_scaleup" {
-  source              = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source              = "../../modules/terraform/aws/cloudwatch/alarm"
   evaluation_periods  = 1
   period              = "120"
   namespace           = "AWS/ECS"
@@ -84,7 +83,7 @@ module "cloudwatch_alarm_ecs_service_scaleup" {
 
 ### ECS service cloudwatch_alarm for scaledown actions
 module "cloudwatch_alarm_ecs_service_scaledown" {
-  source              = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source              = "../../modules/terraform/aws/cloudwatch/alarm"
   evaluation_periods  = 1
   period              = "120"
   namespace           = "AWS/ECS"

@@ -110,7 +110,7 @@ data "aws_iam_policy_document" "ecs_task_execution_custom_policy" {
 
 ###################################################ecs_ec2_role#################################################
 module "ecs_ec2_role" {
-  source = "../../../modules/terraform/aws/iam/role_policy/role"
+  source = "../../modules/terraform/aws/iam/role_policy/role"
   role_name  =  "${local.name}-ecs-ec2-role"
   create_instance_role = "true"
   iam_assume_role_policy_data = data.aws_iam_policy_document.ec2_assume_role_policy.json
@@ -118,7 +118,7 @@ module "ecs_ec2_role" {
 }
 
 module "ecs_ec2_custom_policy" {
-  source = "../../../modules/terraform/aws/iam/role_policy/policy/custom"
+  source = "../../modules/terraform/aws/iam/role_policy/policy/custom"
   role_name  =  ["${module.ecs_ec2_role.role_name}"]
   iam_custom_role_policy_data = data.aws_iam_policy_document.custom_policy.json
   iam_custom_policy_name      = "${local.name}-ecs-ec2-custom-policy"
@@ -127,14 +127,14 @@ module "ecs_ec2_custom_policy" {
 
 ###################################################ecs_task_role#################################################
 module "ecs_task_role" {
-  source = "../../../modules/terraform/aws/iam/role_policy/role"
+  source = "../../modules/terraform/aws/iam/role_policy/role"
   role_name  =  "${local.name}-ecs-task-role"
   create_instance_role = "false"
   iam_assume_role_policy_data = data.aws_iam_policy_document.ecs_service_assume_role_policy.json
 }
 
 module "ecs_task_custom_policy" {
-  source = "../../../modules/terraform/aws/iam/role_policy/policy/custom"
+  source = "../../modules/terraform/aws/iam/role_policy/policy/custom"
   role_name  =  ["${module.ecs_task_role.role_name}"]
   iam_custom_role_policy_data = data.aws_iam_policy_document.ecs_task_custom_policy.json
   iam_custom_policy_name      = "${local.name}-ecs-task-custom-policy"
@@ -142,14 +142,14 @@ module "ecs_task_custom_policy" {
 
 ###################################################ecs_task_execution_role#######################################
 module "ecs_task_execution_role" {
-  source = "../../../modules/terraform/aws/iam/role_policy/role"
+  source = "../../modules/terraform/aws/iam/role_policy/role"
   role_name  =  "${local.name}-ecs-task-execution-role"
   create_instance_role = "false"
   iam_assume_role_policy_data = data.aws_iam_policy_document.ecs_service_assume_role_policy.json
 }
 
 module "ecs_task_execution_custom_policy" {
-  source = "../../../modules/terraform/aws/iam/role_policy/policy/custom"
+  source = "../../modules/terraform/aws/iam/role_policy/policy/custom"
   role_name  =  ["${module.ecs_task_execution_role.role_name}"]
   iam_custom_role_policy_data = data.aws_iam_policy_document.ecs_task_execution_custom_policy.json
   iam_custom_policy_name      = "${local.name}-ecs-task-execution-custom-policy"
@@ -158,14 +158,14 @@ module "ecs_task_execution_custom_policy" {
 ###################################################ecs_service_role#######################################
 
 module "ecs_service_role" {
-  source = "../../../modules/terraform/aws/iam/role_policy/role"
+  source = "../../modules/terraform/aws/iam/role_policy/role"
   role_name  =  "${local.name}-ecs-service-role"
   create_instance_role = "false"
   iam_assume_role_policy_data = data.aws_iam_policy_document.ecs_service_assume_role_policy.json
 }
 
 module "ecs_service_managed_policy" {
-  source = "../../../modules/terraform/aws/iam/role_policy/policy/managed"
+  source = "../../modules/terraform/aws/iam/role_policy/policy/managed"
   role_name  =  "${module.ecs_service_role.role_name}"
   iam_managed_policy_arns = "${var.aws_iam_managed_policy_arns}"
 }

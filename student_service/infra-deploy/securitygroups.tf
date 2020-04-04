@@ -3,7 +3,7 @@
 ##################################################################################
 
 module "alb_sg" {
-  source       = "../../../modules/terraform/aws/security_groups"
+  source       = "../../modules/terraform/aws/security_groups"
   vpc_id       = module.vpc.vpc_id
   name         = "${local.name}-alb"
   tags         = local.tags
@@ -13,7 +13,7 @@ module "alb_sg" {
   tcp_protocol = var.tcp_protocol
 }
 module "alb_sg_rules" {
-  source              = "../../../modules/terraform/aws/security_group_rules/cidr_range"
+  source              = "../../modules/terraform/aws/security_group_rules/cidr_range"
   sg_id               = module.alb_sg.sg_id
   type                = "ingress"
   ingress_rules       = local.alb_sg_ingress_rules
@@ -25,7 +25,7 @@ module "alb_sg_rules" {
 ##################################################################################
 
 module "autoscalinggroup_sg" {
-  source       = "../../../modules/terraform/aws/security_groups"
+  source       = "../../modules/terraform/aws/security_groups"
   vpc_id       = module.vpc.vpc_id
   name         = "${local.name}-autoscalling-group"
   tags         = local.tags
@@ -36,7 +36,7 @@ module "autoscalinggroup_sg" {
 }
 
 module "asg_sg_rules_with_cidr" {
-  source              = "../../../modules/terraform/aws/security_group_rules/cidr_range"
+  source              = "../../modules/terraform/aws/security_group_rules/cidr_range"
   ingress_rules       = local.asg_sg_ingress_rules
   ingress_rules_count = length(local.asg_sg_ingress_rules)
   type                = "ingress"
@@ -44,7 +44,7 @@ module "asg_sg_rules_with_cidr" {
 }
 
 module "asg_sg_rules_with_source_sg_id_alb" {
-  source              = "../../../modules/terraform/aws/security_group_rules/source_sg_id"
+  source              = "../../modules/terraform/aws/security_group_rules/source_sg_id"
   ingress_rules       = local.asg_sg_ingress_rules
   ingress_rules_count = length(local.asg_sg_ingress_rules)
   sg_id               = module.autoscalinggroup_sg.sg_id

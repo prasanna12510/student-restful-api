@@ -12,12 +12,14 @@ variable "env" {
       domain_name          = "play-hooq.tv"
       ec2_root_volume_size = "20"
       ec2_instance_type    = "t3.medium"
+
+
     }
   }
 }
 
 variable "assume_role_principle" {
-  type = "map"
+  type = map
 
   default = {
     "ecs_assume_resources" = ["ecs-tasks.amazonaws.com", "ecs.amazonaws.com"]
@@ -26,14 +28,14 @@ variable "assume_role_principle" {
 }
 
 variable "aws_iam_managed_policy_arns" {
-  type    = "list"
+  type    = list
   default = ["arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"]
 }
 
 ###################custom_policy_actions########################
 
 variable "custom_policy_actions" {
-  type = "map"
+  type = map
   default = {
 
     "elasticache" = [
@@ -119,7 +121,7 @@ variable "custom_policy_actions" {
 }
 
 variable "custom_policy_resources" {
-  type = "map"
+  type = map
   default = {
     "ssm"              = ["*"]
     "cloudwatch"       = ["*"]
@@ -176,4 +178,38 @@ variable "owner" {
 
 variable "tag" {
   default = "APP_TAG"
+}
+
+#route53 variables
+variable "hosted_zone" {
+  default = "play-hooq.tv"
+}
+
+variable "domain_name" {
+  default = ["*.play-hooq.tv"]
+}
+
+variable "subject_alternative_names" {
+  default = ["play-hooq.tv"]
+}
+
+#s3 alb logs
+variable "acl"{
+  description = "Access Control List"
+  default     = "private"
+}
+
+variable "versioning"{
+  description = "Versioning"
+  default     = true
+}
+
+variable "force-destroy"{
+  description = "Force Destroy Option"
+  default     = true
+}
+
+variable "alb_accesslogs_bucket" {
+  description = "s3 alb access bucket"
+  default = "student-api-alb-logs"
 }
