@@ -1,5 +1,5 @@
 data "aws_route53_zone" "dns_zone" {
-  name         = "${local.domainname}." # Notice the dot!!!
+  name         = "${var.certificate_domain_name}." # Notice the dot!!!
   private_zone = false
 }
 
@@ -16,6 +16,6 @@ module "student_service_route53_record" {
 #######################################################  OUTPUTS #######################################################
 
 output "student_service_domain" {
-  value = "${module.student_service_route53_record.dns_record_name}.${terraform.workspace}-hooq.vpc"
+  value = "${module.student_service_route53_record.dns_record_name}.${terraform.workspace}-hooq.tv"
 
 }
