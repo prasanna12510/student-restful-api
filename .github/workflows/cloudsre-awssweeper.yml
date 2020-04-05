@@ -1,8 +1,6 @@
 name: awsweeper-play
 on:
   push:
-    branches:
-      - master
     tags:
       - DELETE-ALL-*
 jobs:
