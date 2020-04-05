@@ -5,8 +5,8 @@ module "target_4xx_count_widget" {
   namespace   = "AWS/ApplicationELB"
   metric_name = var.metric_name["target_4xx_count"]
   dimensions = [
-    "TargetGroup, ${module.alb_targetgroups.target_group_name}",
-  "LoadBalancer, ${module.alb.alb_name}"]
+    "TargetGroup, ${module.alb_targetgroups.target_group_arn_suffix}",
+  "LoadBalancer, ${module.alb.alb_arn_suffix}"]
   period = var.period
   stat   = var.statistic["target_4xx_count"]
   title  = format(var.alarm_name, "${local.name}-target_4xx_count")
@@ -20,8 +20,8 @@ module "target_5xx_count_widget" {
   namespace   = "AWS/ApplicationELB"
   metric_name = var.metric_name["target_5xx_count"]
   dimensions = [
-    "TargetGroup, ${module.alb_targetgroups.target_group_name}",
-  "LoadBalancer, ${module.alb.alb_name}"]
+      "TargetGroup, ${module.alb_targetgroups.target_group_arn_suffix}",
+    "LoadBalancer, ${module.alb.alb_arn_suffix}"]
   period = var.period
   stat   = var.statistic["target_5xx_count"]
   title  = format(var.alarm_name, "${local.name}-target_5xx_count")
@@ -34,7 +34,7 @@ module "elb_5xx_count_widget" {
   source = "../../modules/terraform/aws/cloudwatch/visualization/widget"
   namespace   = "AWS/ApplicationELB"
   metric_name = var.metric_name["elb_5xx_count"]
-  dimensions  = ["LoadBalancer, ${module.alb.alb_name}"]
+  dimensions  = ["LoadBalancer, ${module.alb.alb_arn_suffix}"]
   period      = var.period
   stat        = var.statistic["elb_5xx_count"]
   title       = format(var.alarm_name, "${local.name}-elb_5xx_count")
@@ -48,8 +48,8 @@ module "target_unhealthy_hosts_count_widget" {
   namespace   = "AWS/ApplicationELB"
   metric_name = var.metric_name["target_unhealthy_hosts"]
   dimensions = [
-    "TargetGroup, ${module.alb_targetgroups.target_group_name}",
-  "LoadBalancer, ${module.alb.alb_name}"]
+    "TargetGroup, ${module.alb_targetgroups.target_group_arn_suffix}",
+  "LoadBalancer, ${module.alb.alb_arn_suffix}"]
   period = var.period
   stat   = var.statistic["target_unhealthy_hosts"]
   title  = format(var.alarm_name, "${local.name}-target_unhealthy_hosts_count")
@@ -63,8 +63,8 @@ module "target_response_time_widget" {
   namespace   = "AWS/ApplicationELB"
   metric_name = var.metric_name["target_response_time"]
   dimensions = [
-    "TargetGroup, ${module.alb_targetgroups.target_group_name}",
-  "LoadBalancer, ${module.alb.alb_name}"]
+    "TargetGroup, ${module.alb_targetgroups.target_group_arn_suffix}",
+  "LoadBalancer, ${module.alb.alb_arn_suffix}"]
   period = var.period
   stat   = var.statistic["target_response_time"]
   title  = format(var.alarm_name, "${local.name}-target_response_time")
