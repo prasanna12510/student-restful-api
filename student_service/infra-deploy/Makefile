@@ -20,6 +20,13 @@ ifndef AWS_SECRET_ACCESS_KEY
 	$(error AWS_SECRET_ACCESS_KEY is undefined)
 endif
 
+# check for environemt variables required to view vault secret
+.PHONY: vault-view-check
+vault-view-check:
+ifndef ENVIRONMENT
+	$(error ENVIRONMENT is undefined)
+endif
+
 
 .PHONY: terraform-setup
 terraform-setup: terraform-setup-check set-vaulted-passwords
