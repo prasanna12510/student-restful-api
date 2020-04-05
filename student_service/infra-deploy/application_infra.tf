@@ -1,3 +1,15 @@
+##import remote state
+data "terraform_remote_state" "student-service_generic_state" {
+  backend = "remote"
+  config = {
+    organization = "terracloud-utility"
+    token        = "TF_CLOUD_TOKEN"
+    workspaces = {
+      name = "student-service-generic-${terraform.workspace}"
+    }
+  }
+}
+
 data "aws_ami" "aws_optimized_ecs" {
   most_recent = true
 
@@ -64,7 +76,7 @@ module "alb_listener_https" {
   https_tcp_listeners       = local.https_tcp_listeners
   https_tcp_listeners_count = length(local.https_tcp_listeners)
   ssl_policy                = "ELBSecurityPolicy-2016-08"
-  certificate_arn           = module.acm.acm_certificate_arn
+  certificate_arn           = data.terraform_remote_state.student-service_generic_state.outputs.acm_cert_arn
 }
 
 module "aws_monitoring_log_group" {
