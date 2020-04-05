@@ -18,14 +18,14 @@ module "sns_topic_subscription" {
 ##############################lambda for slack notification######################
 module "lambda_notify_slack" {
   source = "../../modules/terraform/aws/lambda/function"
-  iam_role_arn           = data.terraform_remote_state.student-service_generic_state.outputs.lambda_notify_role_arn
-  bucket_name            = data.terraform_remote_state.student-service_generic_state.outputs.lambda_notify_s3_bucket_name
-  bucket_key             = data.terraform_remote_state.student-service_generic_state.outputs.lambda_notify_s3_bucket_key
+  iam_role_arn           = data.terraform_remote_state.student-service_generic_state.outputs.lambda_slack_notify_role_arn
+  bucket_name            = data.terraform_remote_state.student-service_generic_state.outputs.lambda_slack_notify_s3_bucket_name
+  bucket_key             = data.terraform_remote_state.student-service_generic_state.outputs.lambda_slack_notify_s3_bucket_key
   runtime                = var.slack_lambda_runtime
   timeout                = var.slack_lambda_timeout
   func_name              = local.lambda_notify_name
   func_handler           = var.slack_lambda_handler_name
-  source_code_hash       = data.terraform_remote_state.student-service_generic_state.outputs.lambda_notify_s3_bucket_hash
+  source_code_hash       = data.terraform_remote_state.student-service_generic_state.outputs.lambda_slack_notify_binary_hash
   description            = var.slack_lambda_function_decsription
   tags                   = local.tags
   environment_variables = {
@@ -156,7 +156,7 @@ module "ecs_high_cpu" {
   threshold                 = local.thresholds["ecs_high_cpu"]
   treat_missing_data        = var.treat_missing_data
   datapoints_to_alarm       = var.datapoints_to_alarm
-  alarm_description         = format(var.utlization_alarm_description, "HighCPU_Utilization",local.name, local.thresholds["ecs_high_cpu"], var.period / 60, var.evaluation_periods)
+  alarm_description         = format(var.utlization_alarm_description, local.name, local.thresholds["ecs_high_cpu"], var.period / 60, var.evaluation_periods)
   alarm_actions             = local.cloudwatch_alarm_notify_arns["alarm_actions"]
   dimensions                = local.ecs_dimensions_map
 }
@@ -175,7 +175,7 @@ module "ecs_low_cpu" {
   threshold                 = local.thresholds["ecs_low_cpu"]
   treat_missing_data        = var.treat_missing_data
   datapoints_to_alarm       = var.datapoints_to_alarm
-  alarm_description         = format(var.utlization_alarm_description, "LowCPU_Utilization",local.name, local.thresholds["ecs_low_cpu"], var.period / 60, var.evaluation_periods)
+  alarm_description         = format(var.utlization_alarm_description, local.name, local.thresholds["ecs_low_cpu"], var.period / 60, var.evaluation_periods)
   alarm_actions             = local.cloudwatch_alarm_notify_arns["alarm_actions"]
   dimensions                = local.ecs_dimensions_map
 }
@@ -195,7 +195,7 @@ module "ecs_high_memory" {
   threshold                 = local.thresholds["ecs_high_memory"]
   treat_missing_data        = var.treat_missing_data
   datapoints_to_alarm       = var.datapoints_to_alarm
-  alarm_description         = format(var.utlization_alarm_description, "HighMEM_Utilization",local.name, local.thresholds["ecs_high_memory"], var.period / 60, var.evaluation_periods)
+  alarm_description         = format(var.utlization_alarm_description, local.name, local.thresholds["ecs_high_memory"], var.period / 60, var.evaluation_periods)
   alarm_actions             = local.cloudwatch_alarm_notify_arns["alarm_actions"]
   dimensions                = local.ecs_dimensions_map
 }
@@ -214,7 +214,7 @@ module "ecs_low_memory" {
   threshold                 = local.thresholds["ecs_low_memory"]
   treat_missing_data        = var.treat_missing_data
   datapoints_to_alarm       = var.datapoints_to_alarm
-  alarm_description         = format(var.utlization_alarm_description, "LowMEM_Utilization",local.name, local.thresholds["ecs_low_memory"], var.period / 60, var.evaluation_periods)
+  alarm_description         = format(var.utlization_alarm_description, local.name, local.thresholds["ecs_low_memory"], var.period / 60, var.evaluation_periods)
   alarm_actions             = local.cloudwatch_alarm_notify_arns["alarm_actions"]
   dimensions                = local.ecs_dimensions_map
 }
@@ -233,7 +233,7 @@ module "asg_sys_check_failure" {
   threshold                 = local.thresholds["asg_sys_check_failure"]
   treat_missing_data        = var.treat_missing_data
   datapoints_to_alarm       = var.datapoints_to_alarm
-  alarm_description         = format(var.utlization_alarm_description, "syscheckfailure",local.name, local.thresholds["asg_sys_check_failure"], var.period / 60, var.evaluation_periods)
+  alarm_description         = format(var.utlization_alarm_description, local.name, local.thresholds["asg_sys_check_failure"], var.period / 60, var.evaluation_periods)
   alarm_actions             = local.cloudwatch_alarm_notify_arns["alarm_actions"]
   dimensions                = local.asg_dimensions_map
 }
