@@ -150,7 +150,7 @@ module "dashboard" {
        ${module.ecs_low_cpu_widget.widget_json},
        ${module.ecs_high_memory_widget.widget_json},
        ${module.ecs_low_memory_widget.widget_json},
-       ${module.asg_sys_check_failure_widget.widget_json}
+       ${module.asg_sys_check_failure_widget.widget_json},
        ${module.target_4xx_count_widget.widget_json},
        ${module.target_5xx_count_widget.widget_json},
        ${module.elb_5xx_count_widget.widget_json},
