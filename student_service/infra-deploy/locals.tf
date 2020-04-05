@@ -6,6 +6,12 @@ locals {
   private_subnets     = "${split(",", var.env[terraform.workspace].cidrs_private)}"
   public_subnets      = "${split(",", var.env[terraform.workspace].cidrs_public)}"
   max_subnet_length   = max(length(local.private_subnets), )
+  host_header_listener_rule= ["${var.service_name}.${var.hosted_zone_name}"]
+  path_pattern_listener_rules = [
+    {
+      path_pattern_values = "/students/*"
+    }
+  ]
 
   tags = {
     service_name = var.service_name

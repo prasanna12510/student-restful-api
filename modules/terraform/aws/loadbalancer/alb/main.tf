@@ -20,7 +20,7 @@ resource "aws_alb" "application" {
   access_logs {
     bucket  = var.log_bucket_name
     prefix  = "alb-acesslogs/${var.service}/${var.environment}"
-    enabled = (var.environment == "prod" ) ? true : false
+    enabled = true
   }
 
   timeouts {

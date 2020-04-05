@@ -79,6 +79,25 @@ module "alb_listener_https" {
   certificate_arn           = data.terraform_remote_state.student-service_generic_state.outputs.acm_cert_arn
 }
 
+module "alb_https_listener_rule_host_header" {
+  source                     = "../../modules/terraform/aws/loadbalancer/alb_listener_rules/host_header"
+  is_hostheader              = true
+  tg_arn                     = module.alb_targetgroups.target_group_arns
+  http_listener_arn          = module.alb_listener_https.alb_https_listener_arn
+  host_header_listener_count = length(local.host_header_listener_rule)
+  host_header_listener_rules = local.host_header_listener_rule
+  tags                       = local.tags
+}
+
+module "alb_https_listerner_rule_path_pattern" {
+  source                      =  "../../modules/terraform/aws/loadbalancer/alb_listener_rules/path_pattern"
+  http_listener_arn           = module.alb_listener_https.alb_https_listener_arn
+  tg_arn                      = module.alb_targetgroups.target_group_arns
+  path_pattern_listener_count = length(local.path_pattern_listener_rules)
+  path_pattern_listener_rules = local.path_pattern_listener_rules
+  tags                        = local.tags
+}
+
 module "aws_monitoring_log_group" {
   source            = "../../modules/terraform/aws/cloudwatch/log_group"
   log_groups        = local.log_name_map
