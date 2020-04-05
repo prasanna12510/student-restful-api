@@ -38,19 +38,21 @@ jobs:
         with:
           java-version: 1.8
       - name: login docker
-        run : sed -i -e "s/DOCKER_USERNAME/$DOCKER_USERNAME/g" pom.xml && make docker-login
+        run : make docker-login
         env :
           DOCKER_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
           DOCKER_USERNAME: prasanna1994
 
       - name: Build docker image and push to docker_hub
         run : |
+            sed -i -e "s/DOCKER_USERNAME/$DOCKER_USERNAME/g" pom.xml
             export APP_TAG=`sed -e 's/^"//' -e 's/"$//' <<<"$MASTER_COMMIT_ID | cut -c1-7" && sed -i -e "s/APP_TAG/$APP_TAG/g" pom.xml
             mvn install dockerfile:build -DpushImageTag
             mvn install dockerfile:push
         working-directory: student_service/source-code
         env:
           MASTER_COMMIT_ID: ${{ toJson(github.sha) }}
+          DOCKER_USERNAME: prasanna1994
 
 
   student-api-ecs-deployment:
