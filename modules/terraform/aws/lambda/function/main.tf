@@ -12,7 +12,7 @@ resource "aws_lambda_function" "this" {
   timeout                        = var.timeout
   role                           = var.iam_role_arn
   reserved_concurrent_executions = var.reserved_concurrent_executions
-  tags                           = merge({ "Name" = format("%s", var.function_name) },var.tags)
+  tags                           = merge({ "Name" = format("%s", var.func_name) },var.tags)
   source_code_hash               = var.source_code_hash
 
 

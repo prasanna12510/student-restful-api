@@ -13,4 +13,7 @@ variable "tags" {
 }
 
 
-variable "create_topic"{}
+variable "create_topic"{
+  type = bool
+  default = false
+}

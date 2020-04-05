@@ -1,7 +1,7 @@
 ##################################SNS Topic and Subscription######################
 module "sns_topic" {
   source  = "../../modules/terraform/aws/sns/topic"
-  create_topic = local.create_slack_notification
+  create_topic = true
   name         = local.topic_name
   display_name = local.topic_name
   tags         = local.tags
@@ -9,7 +9,7 @@ module "sns_topic" {
 
 module "sns_topic_subscription" {
   source  = "../../modules/terraform/aws/sns/subscription"
-  create_subscription = local.create_slack_notification
+  create_subscription = true
   topic_arn           = module.sns_topic.sns_topic_arn
   protocol            = "lambda"
   endpoint            = module.lambda_notify_slack.arn
@@ -121,6 +121,25 @@ module  "target_unhealthy_hosts" {
   alarm_description         = format(var.httpcode_alarm_description, "unhealthy_host_count", local.name, local.thresholds["elb_5xx_count"], var.period / 60, var.evaluation_periods)
   alarm_actions             = local.cloudwatch_alarm_notify_arns["alarm_actions"]
   dimensions                = local.load_balancer_dimensions_map
+}
+
+###################Target-ResponseTime#############################################################
+module "target_response_time_average" {
+  source                    = "../../modules/terraform/aws/cloudwatch/alarm"
+  create_metric_alarm       = local.target_response_time_alarm_enabled
+  alarm_name                = format(var.alarm_name,"${local.name}-target_response_time_average")
+  comparison_operator       = "GreaterThanThreshold"
+  evaluation_periods        = var.evaluation_periods
+  metric_name               = var.metric_name["target_response_time"]
+  namespace                 = "AWS/ApplicationELB"
+  period                    = var.period
+  statistic                 = var.statistic["target_response_time"]
+  threshold                 = local.thresholds["target_response_time"]
+  treat_missing_data        = var.treat_missing_data
+  datapoints_to_alarm       = var.datapoints_to_alarm
+  alarm_description         = format(var.target_response_time_alarm_description, local.name, local.thresholds["target_response_time"], var.period / 60, var.evaluation_periods)
+  alarm_actions             = local.cloudwatch_alarm_notify_arns["alarm_actions"]
+  dimensions                = local.target_group_dimensions_map
 }
 
 ###################ECS-HighCPU#############################################################
