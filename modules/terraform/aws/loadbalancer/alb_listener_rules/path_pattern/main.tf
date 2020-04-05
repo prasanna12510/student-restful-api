@@ -3,7 +3,7 @@ resource "aws_alb_listener_rule" "main" {
   listener_arn = element(concat(var.http_listener_arn, [""]), 0)
   action {
     type = "forward"
-    target_group_arn = element(concat(var.tg_arn, [""]), 0)
+    target_group_arn = var.tg_arn
   }
   condition {
     field = "path-pattern"
