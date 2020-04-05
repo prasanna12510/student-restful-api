@@ -41,7 +41,6 @@ module "student-api-ecs-service" {
   desired_count                      = var.desired_count
   cluster_name                       = data.terraform_remote_state.student-service_infra_state.outputs.ecs_cluster_name
   ecs_load_balancers                 = local.ecs_load_balancers
-  health_check_grace_period_seconds  = var.health_check_grace_period_seconds
   scheduling_strategy                = var.scheduling_strategy
 }
 

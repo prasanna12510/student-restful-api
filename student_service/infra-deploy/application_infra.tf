@@ -136,8 +136,8 @@ module "autoscaling_group" {
   environment               = terraform.workspace
   health_check_type         = "ELB"
   termination_policy        = "OldestLaunchConfiguration"
-  health_check_grace_period = "120"
-  default_cooldown          = "60"
+  health_check_grace_period = "300"
+  default_cooldown          = "300"
 }
 
 #autoscaling policy
