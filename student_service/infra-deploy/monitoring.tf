@@ -1,6 +1,6 @@
 ##################################SNS Topic and Subscription######################
 module "sns_topic" {
-  source  = "../../../modules/terraform/aws/sns/topic"
+  source  = "../../modules/terraform/aws/sns/topic"
   create_topic = local.create_slack_notification
   name         = local.topic_name
   display_name = local.topic_name
@@ -8,7 +8,7 @@ module "sns_topic" {
 }
 
 module "sns_topic_subscription" {
-  source  = "../../../modules/terraform/aws/sns/subscription"
+  source  = "../../modules/terraform/aws/sns/subscription"
   create_subscription = local.create_slack_notification
   topic_arn           = module.sns_topic.sns_topic_arn
   protocol            = "lambda"
@@ -17,7 +17,7 @@ module "sns_topic_subscription" {
 
 ##############################lambda for slack notification######################
 module "lambda_notify_slack" {
-  source = "../../../modules/terraform/aws/lambda/function"
+  source = "../../modules/terraform/aws/lambda/function"
   iam_role_arn           = data.terraform_remote_state.student-service_generic_state.outputs.lambda_notify_role_arn
   bucket_name            = data.terraform_remote_state.student-service_generic_state.outputs.lambda_notify_s3_bucket_name
   bucket_key             = data.terraform_remote_state.student-service_generic_state.outputs.lambda_notify_s3_bucket_key
@@ -40,7 +40,7 @@ module "lambda_notify_slack" {
 
 #########################SNS trigger to lambda##################################
 module  "lambda_notify_slack_permission" {
-  source        = "../../../modules/terraform/aws/lambda/permission"
+  source        = "../../modules/terraform/aws/lambda/permission"
   create        = local.create_slack_notification
   statement_id  = var.slack_lambda_permission.statement_id
   action        = var.slack_lambda_permission.action
@@ -51,7 +51,7 @@ module  "lambda_notify_slack_permission" {
 
 ###################HTTP-4xx#############################################################
 module  "httpcode_target_4xx_count" {
-  source                    = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source                    = "../../modules/terraform/aws/cloudwatch/alarm"
   create_metric_alarm       = local.target_4xx_alarm_enabled
   alarm_name                = format(var.alarm_name,"${local.name}-httpcode_target_4xx_count")
   comparison_operator       = "GreaterThanThreshold"
@@ -69,7 +69,7 @@ module  "httpcode_target_4xx_count" {
 }
 ###################HTTP-5xx#############################################################
 module "httpcode_target_5xx_count" {
-  source                    = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source                    = "../../modules/terraform/aws/cloudwatch/alarm"
   create_metric_alarm       = local.target_5xx_alarm_enabled
   alarm_name                = format(var.alarm_name,"${local.name}-httpcode_target_5xx_count")
   comparison_operator       = "GreaterThanThreshold"
@@ -88,7 +88,7 @@ module "httpcode_target_5xx_count" {
 
 ###################ALB-HTTP-5xx#############################################################
 module  "httpcode_elb_5xx_count" {
-  source                    = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source                    = "../../modules/terraform/aws/cloudwatch/alarm"
   create_metric_alarm       = local.elb_5xx_alarm_enabled
   alarm_name                = format(var.alarm_name,"${local.name}-httpcode_elb_5xx_count")
   comparison_operator       = "GreaterThanThreshold"
@@ -106,7 +106,7 @@ module  "httpcode_elb_5xx_count" {
 }
 ###################Target-UnhealthyHost#############################################################
 module  "target_unhealthy_hosts" {
-  source                    = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source                    = "../../modules/terraform/aws/cloudwatch/alarm"
   create_metric_alarm       = local.target_unhealthy_hosts_alarm_enabled
   alarm_name                = format(var.alarm_name,"${local.name}-target_unhealthy_hosts")
   comparison_operator       = "GreaterThanThreshold"
@@ -125,7 +125,7 @@ module  "target_unhealthy_hosts" {
 
 ###################ECS-HighCPU#############################################################
 module "ecs_high_cpu" {
-  source                    = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source                    = "../../modules/terraform/aws/cloudwatch/alarm"
   create_metric_alarm       = local.ecs_high_cpu_enabled
   alarm_name                = format(var.alarm_name,"${local.name}-highcpu-above80")
   comparison_operator       = "GreaterThanThreshold"
@@ -144,7 +144,7 @@ module "ecs_high_cpu" {
 
 ###################ECS-LowCPU#############################################################
 module "ecs_low_cpu" {
-  source                    = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source                    = "../../modules/terraform/aws/cloudwatch/alarm"
   create_metric_alarm       = local.ecs_high_cpu_enabled
   alarm_name                = format(var.alarm_name,"${local.name}-lowcpu-40")
   comparison_operator       = "LessThanThreshold"
@@ -164,7 +164,7 @@ module "ecs_low_cpu" {
 
 ###################ECS-HighMemory#############################################################
 module "ecs_high_memory" {
-  source                    = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source                    = "../../modules/terraform/aws/cloudwatch/alarm"
   create_metric_alarm       = local.ecs_high_memory_enabled
   alarm_name                = format(var.alarm_name,"${local.name}-highmem-above80")
   comparison_operator       = "GreaterThanThreshold"
@@ -183,7 +183,7 @@ module "ecs_high_memory" {
 
 ###################ECS-LowMemory#############################################################
 module "ecs_low_memory" {
-  source                    = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source                    = "../../modules/terraform/aws/cloudwatch/alarm"
   create_metric_alarm       = local.ecs_low_memory_enabled
   alarm_name                = format(var.alarm_name,"${local.name}-lowmem-below40")
   comparison_operator       = "LessThanThreshold"
@@ -202,7 +202,7 @@ module "ecs_low_memory" {
 
 ###################ASG-SystemFailure#############################################################
 module "asg_sys_check_failure" {
-  source                    = "../../../modules/terraform/aws/cloudwatch/alarm"
+  source                    = "../../modules/terraform/aws/cloudwatch/alarm"
   create_metric_alarm       = local.asg_sys_check_failure_enabled
   alarm_name                = format(var.alarm_name,"${local.name}-ec2-syscheck-failure")
   comparison_operator       = "GreaterThanOrEqualToThreshold"
