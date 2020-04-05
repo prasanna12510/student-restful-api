@@ -51,7 +51,7 @@ data "aws_iam_policy_document" "lambda_notify_slack_policy_document" {
 }
 
 module "lambda_slack_notify_s3_bucket" {
-  source = "../../modules/terraform/aws/s3/bucket/v1.0"
+  source = "../modules/terraform/aws/s3/bucket"
   name          = local.s3_bucket_name
   acl           = var.acl
   force_destroy = var.force-destroy
@@ -65,13 +65,13 @@ module "lambda_slack_notify_s3_bucket" {
 }
 
 module "lambda_role" {
-  source = "../../modules/terraform/aws/iam/role_policy/role/v1.0"
+  source = "../modules/terraform/aws/iam/role_policy/role"
   role_name                   = local.lambda_role_name
   iam_assume_role_policy_data = data.aws_iam_policy_document.lambda_assume_role_policy_document.json
 }
 
 module "lambda_policy" {
-  source = "../../modules/terraform/aws/iam/role_policy/policy/custom/v1.0"
+  source = "../modules/terraform/aws/iam/role_policy/policy/custom"
 
   iam_custom_policy_name      = local.lambda_policy_name
   iam_custom_role_policy_data = data.aws_iam_policy_document.lambda_notify_slack_policy_document.json
@@ -101,7 +101,7 @@ data "archive_file" "notify_slack" {
 }
 
 module  "lambda_source_upload" {
-  source = "../../modules/terraform/aws/s3/object/v1.0"
+  source = "../modules/terraform/aws/s3/object"
   bucket_name = module.lambda_slack_notify_s3_bucket.bucket_id
   write_objects = local.write_object_to_s3
 }
