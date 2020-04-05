@@ -1,0 +1,38 @@
+aws_autoscaling_group:
+aws_cloudformation_stack:
+aws_ecs_cluster:
+aws_ebs_snapshot:
+aws_ebs_volume:
+aws_efs_file_system:
+aws_elb:
+aws_instance:
+aws_launch_configuration:
+aws_db_instance:
+aws_s3_bucket:
+aws_nat_gateway:
+aws_eip:
+aws_internet_gateway:
+  - id: NOT(igw-0e53eeaf707a1560d)
+aws_security_group:
+  - id: NOT(sg-072e7b30119c16f54)
+aws_subnet:
+  - id: NOT(subnet-00c536fca42277569|subnet-0ce640138a4ac47b0)
+aws_vpc:
+  - id: NOT(vpc-0d2bfc162cddfe3c5|vpc-0e93579f242b04db6)
+aws_vpc_endpoint:
+aws_network_acl:
+  - id: NOT(acl-06ca2cda7ba0a1250)
+aws_route_table:
+  - id: NOT(rtb-0a578174304758256|rtb-0e4f1a3a3d9b571bf)
+aws_network_interface:
+aws_route53_zone:
+  - id: NOT(Z00020581UIDEFUOIV96B)
+# aws_iam_group:
+# aws_iam_instance_profile:
+# aws_iam_policy:
+# aws_iam_role:
+# aws_iam_user:
+# aws_key_pair:
+# aws_kms_alias:
+# aws_kms_key:
+# aws_route53_zone:

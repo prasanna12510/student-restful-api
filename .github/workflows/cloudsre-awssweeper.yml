@@ -1,0 +1,21 @@
+name: awsweeper-play
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - DELETE-ALL-*
+jobs:
+  delete-aws-resources-play:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout public repo
+        uses: actions/checkout@master
+      - name: install and run awsweeper
+        run: make awsweeper
+        working-directory: generic/aws/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWSWEEPER_VERSION: 0.6.0

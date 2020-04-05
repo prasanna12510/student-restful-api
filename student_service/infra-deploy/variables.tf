@@ -179,15 +179,6 @@ variable "tag" {
   default = "APP_TAG"
 }
 
-#route53 variables
-variable "hosted_zone_name" {
-  default = "play-hooq.tv"
-}
-
-variable "certificate_domain_name" {
-  default = "*.play-hooq.tv"
-}
-
 #s3 alb logs
 variable "acl"{
   description = "Access Control List"
