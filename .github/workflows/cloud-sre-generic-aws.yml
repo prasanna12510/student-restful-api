@@ -1,12 +1,9 @@
 name: cloud-sre-generic-aws
 on:
-  push:
-    branches:
-      - master
-    tags:
-      - CLOUDSRE-PLAY-GENERIC-*
-     paths:
-       - 'generic/**.tf'
+  tags:
+     - CLOUDSRE-GENERIC-*
+  paths:
+     - "generic/**.tf"
 
 jobs:
   deploy-cloud-sre-aws-play:
