@@ -3,6 +3,8 @@ package com.cloudsre.services.student_service.presentation;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,10 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.cloudsre.services.student_service.application.StudentService;
 import com.cloudsre.services.student_service.domain.Student;
-import com.cloudsre.services.student_service.exception.StudentNotFoundAdvice;
 import com.cloudsre.services.student_service.exception.StudentNotFoundException;
 
 import org.slf4j.Logger;
@@ -29,27 +29,30 @@ public class StudentController {
 
 	
 	@GetMapping("/students/health")
-    public String example() {
-        return "All Students are healthy and OK !!! ";
+    public ResponseEntity<String> health() {
+		HttpHeaders responseHeaders = new HttpHeaders();
+	    responseHeaders.set("content-type ", 
+	      "application/json");
+	    return ResponseEntity.ok()
+	      .headers(responseHeaders)
+	      .body("{\"status\":\"All Students are healthy and OK !!!\"}");
     }
 	
 	@GetMapping("/students")
-    public List<Student> getAllBooks() {
+    public ResponseEntity<List<Student>> getAllStudents() {
 		logger.info(this.getClass().getSimpleName() + " - Get all Students service is invoked.");
-        return studentService.getAllStudents();
+        return ResponseEntity.ok(studentService.getAllStudents());
     }
 
     @GetMapping("/students/{id}")
-    public Student getStudent(@PathVariable String id) throws StudentNotFoundException{
+    public ResponseEntity<Student> getStudent(@PathVariable String id) throws StudentNotFoundException{
     	logger.info(this.getClass().getSimpleName() + " - Get students details by id is invoked.");
     	
     	Optional<Student> student = studentService.getStudentById(id);
         if(!student.isPresent())
             throw new StudentNotFoundException(id);
  
-        return student.get();
-        
-        //return studentService.getStudent(studentId);
+        return ResponseEntity.ok(student.get());
     }
 
     @PostMapping("/students")
@@ -92,14 +95,15 @@ public class StudentController {
     }
 
     @DeleteMapping("/students/{id}")
-    public void deleteStudent(@PathVariable String studentId) throws Exception {
+    public void deleteStudent(@PathVariable String id) throws Exception {
     	logger.info(this.getClass().getSimpleName() + " - Delete student by id is invoked.");
     	
-    	Optional<Student> student = studentService.getStudentById(studentId);
+    	Optional<Student> student = studentService.getStudentById(id);
         if(!student.isPresent())
-            throw new Exception("Could not find student with id- " + studentId);
+            throw new Exception("Could not find student with id- " + id);
     	 
-        studentService.deleteStudentById(studentId);
+        studentService.deleteStudentById(id);
+        
     }
 
 }
