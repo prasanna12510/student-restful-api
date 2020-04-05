@@ -3,4 +3,4 @@ RESTFUL API Using Spring Boot and AWS
 
 #### API Architecture
 
-![alt text](https://ibb.co/RBsXMzt)
+![Alt text](doc/img/APIArchitecture.png?raw=true "Title")
