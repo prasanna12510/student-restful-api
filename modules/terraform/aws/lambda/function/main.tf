@@ -1,5 +1,5 @@
 resource "aws_lambda_function" "this" {
-  count                          = var.create_lambda
+  count                          = var.create_lambda ? 1:0
   description                    = var.description
   filename                       = var.filename
   s3_bucket                      = var.bucket_name
@@ -12,8 +12,9 @@ resource "aws_lambda_function" "this" {
   timeout                        = var.timeout
   role                           = var.iam_role_arn
   reserved_concurrent_executions = var.reserved_concurrent_executions
-  tags                           = var.tags
+  tags                           = merge({ "Name" = format("%s", var.function_name) },var.tags)
   source_code_hash               = var.source_code_hash
+
 
   environment {
     variables = var.environment_variables

@@ -22,12 +22,16 @@ locals {
 
   target_groups = [
     {
-      "name"             = "${local.name}-port80"
-      "backend_protocol" = "HTTP"
-      "backend_port"     = 80
-      "slow_start"       = 0
-      "backend_path"     = "/students/health"
-      "target_type"      = "instance"
+      "name"                             = "${local.name}-port80"
+      "backend_protocol"                 = "HTTP"
+      "backend_port"                     = 80
+      "slow_start"                       = 0
+      "backend_path"                     = "/students/health"
+      "target_type"                      = "instance"
+      "health_check_interval"            = 30
+      "health_check_healthy_threshold"   = 3
+      "health_check_timeout"             = 10
+      "health_check_unhealthy_threshold" = 3
     }
   ]
 
@@ -45,7 +49,6 @@ locals {
     }
   ]
 
-  #TODO We have to add ACM(AMAZON CERTIFICATE MANAGER) to add HTTPS listeners cert_arn ssl_policy etc...
   ec2_root_volume_size = var.env[terraform.workspace].ec2_root_volume_size
   ec2_instance_type    = var.env[terraform.workspace].ec2_instance_type
   log_name_map = {
@@ -58,9 +61,6 @@ locals {
     messages   = "${local.name}/var/log/messages"
   }
 
-  asg_dimensions_map = {
-    AutoScalingGroupName = local.name
-  }
 
   alb_sg_ingress_rules = [
     {
@@ -88,4 +88,62 @@ locals {
       "cidr_blocks" = "${local.cidr}"
     }
   ]
+}
+
+##cloudwatch alarms for slack notification
+locals{
+
+  topic_name                   = "${local.name}-${var.env[terraform.workspace].sns_topic_name}"
+  lambda_notify_name           = "${local.name}-${var.env[terraform.workspace].lambda_name}"
+  slack_channel                =  var.env[terraform.workspace].slack_channel_name
+
+  cloudwatch_alarm_notify_arns = {
+    alarm_actions             = [module.sns_topic.sns_topic_arn]
+    ok_actions                = []
+    insufficient_data_actions = []
+  }
+
+  thresholds = {
+    target_4xx_count       = max(var.target_4xx_count_threshold, 0)
+    target_5xx_count       = max(var.target_5xx_count_threshold, 0)
+    elb_5xx_count          = max(var.elb_5xx_count_threshold, 0)
+    target_response_time   = max(var.target_response_time_threshold, 0)
+    target_unhealthy_hosts = max(var.target_unhealthy_hosts_threshold, 0)
+    ecs_high_cpu           = max(var.ecs_high_cpu_threshold,0)
+    ecs_low_cpu            = max(var.ecs_low_cpu_threshold,0)
+    ecs_high_memory        = max(var.ecs_high_memory_threshold,0)
+    ecs_low_memory         = max(var.ecs_low_memory_threshold,0)
+    asg_sys_check_failure  = max(var.asg_sys_check_failure_threshold,0)
+  }
+
+
+  target_4xx_alarm_enabled             =  var.target_4xx_count_threshold > 0
+  target_5xx_alarm_enabled             =  var.target_5xx_count_threshold > 0
+  elb_5xx_alarm_enabled                =  var.elb_5xx_count_threshold > 0
+  target_response_time_alarm_enabled   =  var.target_response_time_threshold > 0
+  target_unhealthy_hosts_alarm_enabled =  var.target_unhealthy_hosts_threshold > 0
+  ecs_high_cpu_enabled                 =  var.ecs_high_cpu_threshold > 0
+  ecs_low_cpu_enabled                  =  var.ecs_low_cpu_threshold > 0
+  ecs_high_memory_enabled              =  var.ecs_high_memory_threshold > 0
+  ecs_low_memory_enabled               =  var.ecs_low_memory_threshold > 0
+  asg_sys_check_failure_enabled        =  var.asg_sys_check_failure_threshold > 0
+
+
+  target_group_dimensions_map = {
+    TargetGroup  = module.alb_targetgroups.target_group_arn_suffix
+    LoadBalancer = module.alb.alb_arn_suffix
+  }
+
+  load_balancer_dimensions_map = {
+    LoadBalancer = module.alb.alb_arn_suffix
+  }
+
+  asg_dimensions_map = {
+    AutoScalingGroupName = module.autoscaling_group.aws_asg_name
+  }
+
+  ecs_dimensions_map = {
+    ClusterName = module.ecs_cluster.ecs_cluster_name
+  }
+
 }

@@ -4,7 +4,11 @@ variable "description" {
   default     = null
 }
 
-variable "create_lambda"{}
+variable "create_lambda"{
+  description = "flag to enable/disable lambda"
+  type        = bool
+  default     = true
+}
 
 
 variable "func_name" {

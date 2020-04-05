@@ -8,7 +8,7 @@ variable "dashboard_body" {
 }
 
 variable "create_dashboard" {
-  type = number
+  type = bool
   description = "create dashboard "
-  default = 0
+  default = false
 }

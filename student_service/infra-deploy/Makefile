@@ -42,3 +42,15 @@ terraform-apply: terraform-plan
 .PHONY: terraform-destroy
 terraform-destroy: terraform-init
 	$(TERRAFORM) destroy -input=false -auto-approve
+
+
+.PHONY: set-vaulted-passwords
+set-vaulted-passwords: vault-view-check vault_env
+	$(eval VAULTED_SLACK_WEBHOOK_URL := $(shell ansible-vault view ../config-deploy/vars/${ENVIRONMENT}/secrets.yml \
+	                           	     --vault-password-file vault_env | \
+																	 awk '/SLACK_WEBHOOK_URL/,/Name/' | \
+	                                 grep Name | sed -E 's/^.*: "(.+)"/\1/'))
+
+vault_env:
+	printf '%s\n' '#!/bin/bash' 'echo $$ANSIBLE_VAULT_PASSWORD' > $@
+	chmod +x $@
