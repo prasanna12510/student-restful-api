@@ -21,7 +21,7 @@ module "target_5xx_count_widget" {
   metric_name = var.metric_name["target_5xx_count"]
   dimensions = [
       "TargetGroup, ${module.alb_targetgroups.target_group_arn_suffix}",
-    "LoadBalancer, ${module.alb.alb_arn_suffix}"]
+      "LoadBalancer, ${module.alb.alb_arn_suffix}"]
   period = var.period
   stat   = var.statistic["target_5xx_count"]
   title  = format(var.alarm_name, "${local.name}-target_5xx_count")

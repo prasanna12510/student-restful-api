@@ -22,8 +22,9 @@ endif
 
 
 .PHONY: terraform-setup
-terraform-setup: terraform-setup-check
-	sed -i -e "s/APP_TAG/${APP_TAG}/g" *.tf
+terraform-setup: terraform-setup-check set-vaulted-passwords
+	sed -i -e "s/APP_TAG/${APP_TAG}/g" *.tf && \
+	sed -i -e "s@VAULTED_SLACK_WEBHOOK_URL@$(VAULTED_SLACK_WEBHOOK_URL)@g" *.tf && \
 	sed -i -e "s/TF_CLOUD_TOKEN/${TF_CLOUD_TOKEN}/g" *.tf
 
 
