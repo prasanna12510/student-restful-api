@@ -44,9 +44,7 @@ jobs:
           DOCKER_USERNAME: prasanna1994
 
       - name: Build docker image and push to docker_hub
-        run : |
-          export APP_TAG=`sed -e 's/^"//' -e 's/"$//' <<<"$MASTER_COMMIT_ID | cut -c1-7"`
-          mvn install dockerfile:build -Dgit-commit-id=$APP_TAG
+        run : export APP_TAG=`sed -e 's/^"//' -e 's/"$//' <<<"$MASTER_COMMIT_ID | cut -c1-7"` && mvn install dockerfile:build -Dgit-commit-id=$APP_TAG
         working-directory: student_service/source-code
         env:
           MASTER_COMMIT_ID: ${{ toJson(github.sha) }}
