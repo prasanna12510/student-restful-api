@@ -88,6 +88,11 @@ variable "ulimits" {
 
 #########################
 
+variable "health_check_grace_period_seconds" {
+  type    = number
+  default = 120
+}
+
 variable "desired_count" {
   type    = number
   default = 2
