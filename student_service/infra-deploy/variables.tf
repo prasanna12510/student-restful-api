@@ -10,7 +10,7 @@ variable "env" {
       cidrs_private        = "192.168.0.48/28,192.168.0.64/28,192.168.0.80/28"
       cidrs_elasticache    = "192.168.0.96/28,192.168.0.112/28,192.168.0.128/28"
       ec2_root_volume_size = "20"
-      ec2_instance_type    = "t3.medium"
+      ec2_instance_type    = "m5.large"
 
 
     }

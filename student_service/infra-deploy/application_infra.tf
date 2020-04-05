@@ -128,8 +128,8 @@ module "autoscaling_group" {
   launch_config_name        = module.launch_configuration.launch_configuration_name
   vpc                       = "${module.private_subnets.subnet_ids}"
   target_group_arn          = module.alb_targetgroups.target_group_arns
-  max_size                  = 3
-  min_size                  = 1
+  max_size                  = 10
+  min_size                  = 2
   desired_capacity          = 2
   name                      = local.name
   owner                     = var.owner
@@ -161,8 +161,8 @@ module "asg_autoscaling_policy_scale_down" {
 
 #cloudwatch alarms for trigger autoscaling
 module "cloudwatch_alarm_ec2_scaleup" {
-  source                    = "../../modules/terraform/aws/cloudwatch/alarm"
-  create_metric_alarm       = true
+  source              = "../../modules/terraform/aws/cloudwatch/alarm"
+  create_metric_alarm = true
   evaluation_periods  = 1
   period              = "60"
   namespace           = "AWS/EC2"
