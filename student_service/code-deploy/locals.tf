@@ -36,7 +36,7 @@ locals {
   log_configuration = {
     logDriver = "awslogs"
     options = {
-      awslogs-group         = "${local.service_name}-${terraform.workspace}-logs"
+      awslogs-group         = "${var.container_name}-${terraform.workspace}-logs"
       awslogs-region        = var.region
       awslogs-stream-prefix = var.container_name
     }
