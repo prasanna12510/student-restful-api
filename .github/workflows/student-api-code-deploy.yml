@@ -25,13 +25,8 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
-        run: |
-          export APP_TAG=`sed -e 's/^"//' -e 's/"$//' <<<"$MASTER_COMMIT_ID | cut -c1-7"`
-          mvn clean package -DSkipTests
+        run: mvn clean package -DSkipTests
         working-directory: student_service/source-code
-        env:
-          DOCKER_USERNAME: prasanna1994
-          MASTER_COMMIT_ID: ${{ toJson(github.sha) }}
 
   student-api-image-build:
     runs-on: ubuntu-latest
@@ -51,13 +46,17 @@ jobs:
       - name: Build docker image and push to docker_hub
         run : |
             export APP_TAG=`sed -e 's/^"//' -e 's/"$//' <<<"$MASTER_COMMIT_ID | cut -c1-7"`
-            mvn install dockerfile:build -DpushImageTag
-            mvn install dockerfile:push
+            mvn install dockerfile:build -Dgit-revision=$APP_TAG
         working-directory: student_service/source-code
         env:
           MASTER_COMMIT_ID: ${{ toJson(github.sha) }}
-          DOCKER_USERNAME: prasanna1994
 
+      - name: push to docker image to docker_hub
+        run : docker push $DOCKER_USERNAME/$REPO_NAME:$APP_TAG
+        env:
+          MASTER_COMMIT_ID: ${{ toJson(github.sha) }}
+          DOCKER_USERNAME: prasanna1994
+          REPO_NAME: student-api
 
   student-api-ecs-deployment:
     runs-on: ubuntu-latest
@@ -77,7 +76,7 @@ jobs:
         env:
           TF_IN_AUTOMATION: true
           TF_WORKSPACE: play
-          TF_TOKEN_CLOUD_SRE: ${{ secrets.TF_CLOUD_TOKEN }}
+          TF_CLOUD_TOKEN: ${{ secrets.TF_CLOUD_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
           MASTER_COMMIT_ID: ${{ toJson(github.sha) }}
