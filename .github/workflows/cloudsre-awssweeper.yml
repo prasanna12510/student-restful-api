@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@master
       - name: install and run awsweeper
         run: make awsweeper
-        working-directory: generic/aws/
+        working-directory: generic/
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
