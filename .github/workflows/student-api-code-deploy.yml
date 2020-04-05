@@ -49,15 +49,14 @@ jobs:
         env:
           MASTER_COMMIT_ID: ${{ toJson(github.sha) }}
 
-      - name: push to docker image to docker_hub
+      - name: push docker image to docker_hub
         run : |
           export APP_TAG=`sed -e 's/^"//' -e 's/"$//' <<<"$MASTER_COMMIT_ID" | cut -c1-7`
-          docker tag $DOCKER_USERNAME/$REPO_NAME:latest $DOCKER_USERNAME/$REPO_NAME:$APP_TAG
-          docker push $DOCKER_USERNAME/$REPO_NAME:$APP_TAG
+          make docker-retag-push
         env:
           MASTER_COMMIT_ID: ${{ toJson(github.sha) }}
           DOCKER_USERNAME: prasanna1994
-          REPO_NAME: student-api
+          DOCKER_REPO: student-api
 
   student-api-ecs-deployment:
     runs-on: ubuntu-latest

@@ -4,7 +4,7 @@ TERRAFORM	:= /usr/bin/terraform
 .PHONY: terraform-setup-check
 terraform-setup-check:
 
-ifndef TF_TOKEN_CLOUD_SRE
+ifndef TF_CLOUD_TOKEN
 	$(error TF_CLOUD_TOKEN is undefined)
 endif
 
