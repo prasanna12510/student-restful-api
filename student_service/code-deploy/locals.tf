@@ -28,10 +28,6 @@ locals {
       valueFrom = "arn:aws:ssm:${var.region}:${local.aws_account_id}:parameter/app/student-api/NAME"
     },
     {
-      name      = "PORT"
-      valueFrom = "arn:aws:ssm:${var.region}:${local.aws_account_id}:parameter/app/student-api/PORT"
-    },
-    {
       name      = "VPCID"
       valueFrom = "arn:aws:ssm:${var.region}:${local.aws_account_id}:parameter/app/student-api/VPCID"
     }
