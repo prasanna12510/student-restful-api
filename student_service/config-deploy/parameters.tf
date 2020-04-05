@@ -14,7 +14,7 @@ data "terraform_remote_state" "student-service_infra_state" {
 ######################################################  RESOURCES  #####################################################
 
 module "student-api_parameters" {
-  source    = "../../../modules/terraform/aws/parameterstore"
+  source    = "../../modules/terraform/aws/parameterstore"
   tags      = { ManagedBy = "${local.name}" }
 
   parameter_write = [
