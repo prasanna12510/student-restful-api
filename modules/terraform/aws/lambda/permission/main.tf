@@ -1,5 +1,5 @@
 resource "aws_lambda_permission" "main" {
-  count = var.create
+  count = var.create ? 1:0
 
   statement_id  = var.statement_id
   action        = var.action

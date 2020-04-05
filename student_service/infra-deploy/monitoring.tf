@@ -41,7 +41,7 @@ module "lambda_notify_slack" {
 #########################SNS trigger to lambda##################################
 module  "lambda_notify_slack_permission" {
   source        = "../../modules/terraform/aws/lambda/permission"
-  create        = local.create_slack_notification
+  create        = true
   statement_id  = var.slack_lambda_permission.statement_id
   action        = var.slack_lambda_permission.action
   function_name = module.lambda_notify_slack.func_name

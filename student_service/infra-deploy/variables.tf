@@ -304,6 +304,12 @@ variable "target_unhealthy_hosts_threshold" {
   default     = 1
 }
 
+variable "target_response_time_threshold" {
+  type        = number
+  description = "The maximum average target response time (in seconds) over a period. A negative value will disable the alert"
+  default     = 0.5
+}
+
 variable "ecs_high_memory_threshold" {
   type        = number
   description = "Higher Memory Utilization. A negative value will disable the alert"
@@ -316,19 +322,19 @@ variable "ecs_low_memory_threshold" {
   default     = 40
 }
 
-variable "ecs_high_cpu" {
+variable "ecs_high_cpu_threshold" {
   type        = number
   description = "High CPU Utlilization. A negative value will disable the alert"
   default     = 80
 }
 
-variable "ecs_low_cpu" {
+variable "ecs_low_cpu_threshold" {
   type        = number
   description = "Low CPU Utlization. A negative value will disable the alert"
   default     = 40
 }
 
-variable "asg_sys_check_failure" {
+variable "asg_sys_check_failure_threshold" {
   type        = number
   description = "EC2 System check failure. A negative value will disable the alert"
   default     = 1
@@ -341,11 +347,6 @@ variable "httpcode_alarm_description" {
   default     = "HTTPCode %v count for %v over %v last %d minute(s) over %v period(s)"
 }
 
-variable "target_response_time_threshold" {
-  type        = number
-  description = "The maximum average target response time (in seconds) over a period. A negative value will disable the alert"
-  default     = 0.5
-}
 
 variable "target_response_time_alarm_description" {
   type        = string

@@ -1,4 +1,7 @@
-variable "create"{}
+variable "create"{
+  type        = bool
+  default     = false
+}
 
 
 variable "statement_id" {
