@@ -1,4 +1,3 @@
-
 locals {
   name                     = var.env[terraform.workspace].name
   service_name             = local.name
