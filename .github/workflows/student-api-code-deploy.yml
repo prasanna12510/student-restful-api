@@ -45,8 +45,8 @@ jobs:
 
       - name: Build docker image and push to docker_hub
         run : |
-            export APP_TAG=`sed -e 's/^"//' -e 's/"$//' <<<"$MASTER_COMMIT_ID | cut -c1-7"`
-            mvn install dockerfile:build -Dgit-revision=$APP_TAG
+          export APP_TAG=`sed -e 's/^"//' -e 's/"$//' <<<"$MASTER_COMMIT_ID | cut -c1-7"`
+          mvn install dockerfile:build -Dgit-revision=$APP_TAG
         working-directory: student_service/source-code
         env:
           MASTER_COMMIT_ID: ${{ toJson(github.sha) }}
