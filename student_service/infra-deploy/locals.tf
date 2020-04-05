@@ -28,10 +28,6 @@ locals {
       "slow_start"                       = 0
       "backend_path"                     = "/students/health"
       "target_type"                      = "instance"
-      "health_check_interval"            = 30
-      "health_check_healthy_threshold"   = 3
-      "health_check_timeout"             = 10
-      "health_check_unhealthy_threshold" = 3
     }
   ]
 
