@@ -5,6 +5,8 @@ on:
       - master
     tags:
       - CLOUDSRE-PLAY-GENERIC-*
+     paths:
+       - 'generic/**.tf'
 
 jobs:
   deploy-cloud-sre-aws-play:
