@@ -1,6 +1,6 @@
 ###create acm certificate in generic level
 module "acm" {
-  source           = "../../modules/terraform/aws/acm"
+  source           = "../modules/terraform/aws/acm"
   domain_name      = var.certificate_domain_name
   hosted_zone_name = var.hosted_zone_name
   certificate_name = "wildcard.${var.hosted_zone_name}"
