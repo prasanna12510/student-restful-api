@@ -1,10 +1,12 @@
 name: cloud-sre-generic-aws
 on:
-  tags:
-     - CLOUDSRE-GENERIC-*
-  paths:
-     - "generic/**.tf"
-
+  push:
+    branches:
+      - master
+    tags:
+      - CLOUDSRE-GENERIC-*
+    paths:
+      - "generic/**.tf"
 jobs:
   deploy-cloud-sre-aws-play:
     runs-on: ubuntu-latest
