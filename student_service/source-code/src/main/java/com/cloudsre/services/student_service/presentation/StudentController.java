@@ -28,6 +28,10 @@ public class StudentController {
 	private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
 	
+	@GetMapping("/students/health")
+    public String example() {
+        return "All Students are healthy and OK !!! ";
+    }
 	
 	@GetMapping("/students")
     public List<Student> getAllBooks() {

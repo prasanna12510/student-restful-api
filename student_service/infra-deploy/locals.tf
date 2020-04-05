@@ -20,7 +20,7 @@ locals {
       "backend_protocol" = "HTTP"
       "backend_port"     = 80
       "slow_start"       = 0
-      "backend_path"     = "/"
+      "backend_path"     = "/students/health"
       "target_type"      = "instance"
     }
   ]
