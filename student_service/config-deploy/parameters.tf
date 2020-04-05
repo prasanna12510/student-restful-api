@@ -20,14 +20,14 @@ module "student-api_parameters" {
   parameter_write = [
     {
       description = "student-api APP NAME",
-      name        = "/app/student-service/NAME",
+      name        = "/app/student-api/NAME",
       overwrite   = "true",
       type        = "String",
       value       = "${var.env[terraform.workspace].APP_NAME}"
     },
     {
       description = "student-api VPC-ID",
-      name        = "/app/student-service/VPCID",
+      name        = "/app/student-api/VPCID",
       overwrite   = "true",
       type        = "String",
       value       = data.terraform_remote_state.student-service_infra_state.outputs.vpc_id
