@@ -26,15 +26,15 @@ locals {
   container_secrets = [
     {
       name      = "NAME"
-      valueFrom = "arn:aws:ssm:${var.region}:${local.aws_account_id}:parameter/app/student-service/NAME"
+      valueFrom = "arn:aws:ssm:${var.region}:${local.aws_account_id}:parameter/app/student-api/NAME"
     },
     {
       name      = "PORT"
-      valueFrom = "arn:aws:ssm:${var.region}:${local.aws_account_id}:parameter/app/student-service/PORT"
+      valueFrom = "arn:aws:ssm:${var.region}:${local.aws_account_id}:parameter/app/student-api/PORT"
     },
     {
       name      = "VPCID"
-      valueFrom = "arn:aws:ssm:${var.region}:${local.aws_account_id}:parameter/app/student-service/VPCID"
+      valueFrom = "arn:aws:ssm:${var.region}:${local.aws_account_id}:parameter/app/student-api/VPCID"
     }
   ]
 
