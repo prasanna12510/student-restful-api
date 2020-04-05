@@ -1,2 +1,6 @@
 # student-restful-api
-restful api using springboot 
+RESTFUL API Using Spring Boot and AWS
+
+#### API Architecture
+
+![alt text](https://ibb.co/RBsXMzt)
