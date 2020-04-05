@@ -6,8 +6,8 @@ APP_TAG		:= $(shell git rev-parse HEAD | cut -c1-7)
 # check for environment variables to replace tokens
 .PHONY: terraform-setup-check
 terraform-setup-check:
-ifndef TF_TOKEN_CLOUD_SRE
-	$(error TF_TOKEN_CLOUD_SRE is undefined)
+ifndef TF_CLOUD_TOKEN
+	$(error TF_CLOUD_TOKEN is undefined)
 endif
 
 # check for environemt variables required by terraform
