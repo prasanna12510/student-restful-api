@@ -8,6 +8,12 @@ locals {
                           source = data.archive_file.notify_slack[0].output_path
                           key = "notify_slack-${var.commit_sha}.zip"
                           }]
+  tags = {
+    environment  = terraform.workspace
+    version      = var.commit_sha
+    name         = local.s3_bucket_name
+    ManagedBy    = "terraform"
+  }
 }
 
 #####set IAM policy for lambda function###
