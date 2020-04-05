@@ -23,7 +23,8 @@ endif
 
 .PHONY: terraform-setup
 terraform-setup: terraform-setup-check
-	sed -i -e "s/TF_CLOUD_TOKEN/${TF_CLOUD_TOKEN}/g" *.tf
+	sed -i -e "s/TF_CLOUD_TOKEN/${TF_CLOUD_TOKEN}/g" *.tf && \
+	sed -i -e "s/APP_TAG/$(APP_TAG)/g" variables.tf
 .PHONY: terraform-init
 terraform-init: terraform-init-check terraform-setup
 	$(TERRAFORM) init -input=false
