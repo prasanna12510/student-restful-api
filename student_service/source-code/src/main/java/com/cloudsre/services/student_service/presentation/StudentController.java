@@ -1,9 +1,15 @@
 package com.cloudsre.services.student_service.presentation;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cloudsre.services.student_service.application.StudentService;
 import com.cloudsre.services.student_service.domain.Student;
 import com.cloudsre.services.student_service.exception.StudentNotFoundException;
+import io.swagger.annotations.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RestController
+@Api(value="Student Management System", description = "CRUD operations for Student Portal")
 public class StudentController {
 	
 	@Autowired
@@ -27,25 +35,30 @@ public class StudentController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
-	
+	@ApiOperation(value = "Health check for all students", response = String.class)
 	@GetMapping("/students/health")
     public ResponseEntity<String> health() {
 		HttpHeaders responseHeaders = new HttpHeaders();
-	    responseHeaders.set("content-type ", 
-	      "application/json");
+	    responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 	    return ResponseEntity.ok()
 	      .headers(responseHeaders)
 	      .body("{\"status\":\"All Students are healthy and OK !!!\"}");
     }
 	
+	@ApiOperation(value = "View a list of available student", response = List.class)
+	@ApiResponses(value = {
+		    @ApiResponse(code = 200, message = "Successfully retrieved list"),
+		    @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+		})
 	@GetMapping("/students")
     public ResponseEntity<List<Student>> getAllStudents() {
 		logger.info(this.getClass().getSimpleName() + " - Get all Students service is invoked.");
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
+	@ApiOperation(value = "Get student by Id")
     @GetMapping("/students/{id}")
-    public ResponseEntity<Student> getStudent(@PathVariable String id) throws StudentNotFoundException{
+    public ResponseEntity<Student> getStudent(@ApiParam(value = "Student id from which student object will retrieve", required = true) @PathVariable String id) throws StudentNotFoundException{
     	logger.info(this.getClass().getSimpleName() + " - Get students details by id is invoked.");
     	
     	Optional<Student> student = studentService.getStudentById(id);
@@ -55,20 +68,23 @@ public class StudentController {
         return ResponseEntity.ok(student.get());
     }
 
+    @ApiOperation(value = "Add new student details")
     @PostMapping("/students")
-    public void addStudent(@RequestBody Student student) throws Exception{
+    public void addStudent(@ApiParam(value = "Student object store in database table", required = true) @Valid @RequestBody Student student) throws Exception{
     	logger.info(this.getClass().getSimpleName() + " - Create new student method is invoked.");
     	
     	if(student.getId() == null || student.getId().isEmpty())
     		throw new Exception("Empty StudentId is not allowed");
     	
-        studentService.addStudent(student);
-    	
+        studentService.addStudent(student);	
         
     }
-
+    
+    
+    @ApiOperation(value = "Update existing student details based on Id")
     @PutMapping("/students/{id}")
-    public void updateStudent(@PathVariable String id, @RequestBody Student updatetudobj) throws Exception{
+    public void updateStudent(@ApiParam(value = "Student Id to update employee object", required = true) @PathVariable String id, 
+    		 @ApiParam(value = "Update student object", required = true) @Valid @RequestBody Student updatetudobj) throws Exception{
     	logger.info(this.getClass().getSimpleName() + " - Update student details by id is invoked.");
     	 
     	Optional<Student> student = studentService.getStudentById(id);
@@ -93,9 +109,10 @@ public class StudentController {
         
         studentService.updateStudent(updatetudobj);
     }
-
+    
+    @ApiOperation(value = "Delete student by Id")
     @DeleteMapping("/students/{id}")
-    public void deleteStudent(@PathVariable String id) throws Exception {
+    public Map<String, Boolean> deleteStudent(@ApiParam(value = "Student Id from which employee object will delete from database table", required = true) @PathVariable String id) throws Exception {
     	logger.info(this.getClass().getSimpleName() + " - Delete student by id is invoked.");
     	
     	Optional<Student> student = studentService.getStudentById(id);
@@ -103,6 +120,9 @@ public class StudentController {
             throw new Exception("Could not find student with id- " + id);
     	 
         studentService.deleteStudentById(id);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return response;
         
     }
 

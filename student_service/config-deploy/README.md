@@ -5,14 +5,14 @@ pip/pip3  install ansible
 
 ```
 
-#### Get the miyazaki ansible vault-password(Already stored in the github secrets) from cloud-sre team and store in your local system in HOME directory(~) a file like below
+#### Get the  ansible vault-password(Already stored in the github secrets) and store in your local system in HOME directory(~) a file like below
 
 ```
  ~/.vault_pass.txt
 
 ```
 
-#### Encrypt your variables using ansible-vault as below - Its already done by cloudsre team
+#### Encrypt your variables using ansible-vault as below
 
 ```
 ansibile-vault encrypt vars/play/secrets.yml --vault-password-file ~/.vault_pass.txt
