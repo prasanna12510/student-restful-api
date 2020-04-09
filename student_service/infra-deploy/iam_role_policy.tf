@@ -47,16 +47,6 @@ data "aws_iam_policy_document" "custom_policy" {
   }
 }
 
-# Custom Policy Document for creating policy json for ecs_task_role
-data "aws_iam_policy_document" "ecs_task_custom_policy" {
-  statement {
-    sid       = "1"
-    actions   = "${var.custom_policy_actions["elasticache"]}"
-    effect    = "Allow"
-    resources = "${var.custom_policy_resources["elasticache"]}"
-  }
-}
-
 # Custom Policy Document for creating policy json for ecs_task_execution_role
 data "aws_iam_policy_document" "ecs_task_execution_custom_policy" {
   statement {

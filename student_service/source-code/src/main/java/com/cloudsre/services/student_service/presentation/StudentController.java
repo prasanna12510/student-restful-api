@@ -77,7 +77,8 @@ public class StudentController {
     	if(student.getId() == null || student.getId().isEmpty())
     		throw new Exception("Empty StudentId is not allowed");
     	
-        return studentService.addStudent(student);	
+        Student s =studentService.addStudent(student);	
+        return s;
         
      }
     
@@ -85,7 +86,7 @@ public class StudentController {
     @ApiOperation(value = "Update existing student details based on Id")
     @PutMapping("/students/{id}")
     public void updateStudent(@ApiParam(value = "Student Id to update student object", required = true) @PathVariable String id, 
-    		 @ApiParam(value = "Update student object", required = true) @Valid @RequestBody Student updatetudobj) throws StudentNotFoundException{
+    		 @ApiParam(value = "Update student object", required = true) @Valid @RequestBody Student updatestudobj) throws StudentNotFoundException{
     	logger.info(this.getClass().getSimpleName() + " - Update student details by id is invoked.");
     	 
     	Optional<Student> student = studentService.getStudentById(id);
@@ -94,21 +95,20 @@ public class StudentController {
         
         
         /*To prevent overriding of existing values of variables*/
-        if(updatetudobj.getFirstName() == null || updatetudobj.getFirstName().isEmpty())
-        	updatetudobj.setFirstName(student.get().getFirstName());
-        if(updatetudobj.getLastName() == null || updatetudobj.getLastName().isEmpty())
-        	updatetudobj.setLastName(student.get().getLastName());
-        if(updatetudobj.getGrade() == null || updatetudobj.getGrade().isEmpty())
-        	updatetudobj.setGrade(student.get().getGrade());
-        if(updatetudobj.getNationality() == null || updatetudobj.getNationality().isEmpty())
-        	updatetudobj.setNationality(student.get().getNationality());
+        if(updatestudobj.getFirstName() == null || updatestudobj.getFirstName().isEmpty())
+        	updatestudobj.setFirstName(student.get().getFirstName());
+        if(updatestudobj.getLastName() == null || updatestudobj.getLastName().isEmpty())
+        	updatestudobj.setLastName(student.get().getLastName());
+        if(updatestudobj.getGrade() == null || updatestudobj.getGrade().isEmpty())
+        	updatestudobj.setGrade(student.get().getGrade());
+        if(updatestudobj.getNationality() == null || updatestudobj.getNationality().isEmpty())
+        	updatestudobj.setNationality(student.get().getNationality());
        
         
-        // Required for the "where" clause in the sql query template.
+        // Required for the "where" clause in the SQL query template.
+        updatestudobj.setId(id);
         
-        updatetudobj.setId(id);
-        
-        studentService.updateStudent(updatetudobj);
+        studentService.updateStudent(updatestudobj);
         
         logger.info(this.getClass().getSimpleName() + " student " + id+ "updated successfully");
     }
