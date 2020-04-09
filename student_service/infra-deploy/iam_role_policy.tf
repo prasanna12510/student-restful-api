@@ -34,7 +34,7 @@ data "aws_iam_policy_document" "custom_policy" {
   }
   statement {
     sid       = "2"
-    actions   = var.custom_policy_action.cloudwatch
+    actions   = var.custom_policy_actions.cloudwatch
     effect    = "Allow"
     resources = var.custom_policy_resources.cloudwatch
   }
@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "ecs_task_execution_custom_policy" {
 
   statement {
     sid       = "2"
-    actions   = var.custom_policy_action.cloudwatch
+    actions   = var.custom_policy_actions.cloudwatch
     effect    = "Allow"
     resources = var.custom_policy_resources.cloudwatch
   }
