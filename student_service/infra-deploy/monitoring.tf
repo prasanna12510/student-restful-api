@@ -1,4 +1,4 @@
-##################################SNS Topic and Subscription######################
+#################################SNS Topic and Subscription######################
 module "sns_topic" {
   source  = "../../modules/terraform/aws/sns/topic"
   create_topic = true
