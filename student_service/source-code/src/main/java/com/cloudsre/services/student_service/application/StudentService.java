@@ -27,8 +27,8 @@ public class StudentService {
         return Optional.of(studentRepository.findById(id).orElseGet(Student::new));
     }
 
-    public void addStudent(Student s) {
-        studentRepository.save(s);
+    public Student addStudent(Student s) {
+        return studentRepository.save(s);
     }
 
     public void updateStudent(Student s) {

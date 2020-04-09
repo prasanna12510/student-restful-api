@@ -54,6 +54,7 @@ public class StudentController {
     public ResponseEntity<List<Student>> getAllStudents() {
 		logger.info(this.getClass().getSimpleName() + " - Get all Students service is invoked.");
         return ResponseEntity.ok(studentService.getAllStudents());
+        
     }
 
 	@ApiOperation(value = "Get student by Id")
@@ -70,26 +71,26 @@ public class StudentController {
 
     @ApiOperation(value = "Add new student details")
     @PostMapping("/students")
-    public void addStudent(@ApiParam(value = "Student object store in database table", required = true) @Valid @RequestBody Student student) throws Exception{
+    public Student addStudent(@ApiParam(value = "Student object store in database table", required = true) @Valid @RequestBody Student student) throws Exception{
     	logger.info(this.getClass().getSimpleName() + " - Create new student method is invoked.");
     	
     	if(student.getId() == null || student.getId().isEmpty())
     		throw new Exception("Empty StudentId is not allowed");
     	
-        studentService.addStudent(student);	
+        return studentService.addStudent(student);	
         
-    }
+     }
     
     
     @ApiOperation(value = "Update existing student details based on Id")
     @PutMapping("/students/{id}")
-    public void updateStudent(@ApiParam(value = "Student Id to update employee object", required = true) @PathVariable String id, 
-    		 @ApiParam(value = "Update student object", required = true) @Valid @RequestBody Student updatetudobj) throws Exception{
+    public void updateStudent(@ApiParam(value = "Student Id to update student object", required = true) @PathVariable String id, 
+    		 @ApiParam(value = "Update student object", required = true) @Valid @RequestBody Student updatetudobj) throws StudentNotFoundException{
     	logger.info(this.getClass().getSimpleName() + " - Update student details by id is invoked.");
     	 
     	Optional<Student> student = studentService.getStudentById(id);
         if(!student.isPresent())
-            throw new Exception("Could not find student with id- " + id);
+        	throw new StudentNotFoundException(id);
         
         
         /*To prevent overriding of existing values of variables*/
@@ -108,18 +109,21 @@ public class StudentController {
         updatetudobj.setId(id);
         
         studentService.updateStudent(updatetudobj);
+        
+        logger.info(this.getClass().getSimpleName() + " student " + id+ "updated successfully");
     }
     
     @ApiOperation(value = "Delete student by Id")
     @DeleteMapping("/students/{id}")
-    public Map<String, Boolean> deleteStudent(@ApiParam(value = "Student Id from which employee object will delete from database table", required = true) @PathVariable String id) throws Exception {
+    public Map<String, Boolean> deleteStudent(@ApiParam(value = "Student Id from which student object will delete from database table", required = true) @PathVariable String id) throws StudentNotFoundException {
     	logger.info(this.getClass().getSimpleName() + " - Delete student by id is invoked.");
     	
     	Optional<Student> student = studentService.getStudentById(id);
         if(!student.isPresent())
-            throw new Exception("Could not find student with id- " + id);
+            throw new StudentNotFoundException(id);
     	 
         studentService.deleteStudentById(id);
+        logger.info(this.getClass().getSimpleName() + " student " + id+ "deleted successfully");
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return response;
