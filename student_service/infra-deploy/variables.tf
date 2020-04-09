@@ -38,22 +38,6 @@ variable "custom_policy_actions" {
   type = map
   default = {
 
-    "elasticache" = [
-      "ec2:AuthorizeSecurityGroupIngress",
-      "ec2:CreateNetworkInterface",
-      "ec2:CreateSecurityGroup",
-      "ec2:DeleteNetworkInterface",
-      "ec2:DeleteSecurityGroup",
-      "ec2:DescribeAvailabilityZones",
-      "ec2:DescribeNetworkInterfaces",
-      "ec2:DescribeSecurityGroups",
-      "ec2:DescribeSubnets",
-      "ec2:DescribeVpcs",
-      "ec2:ModifyNetworkInterfaceAttribute",
-      "ec2:RevokeSecurityGroupIngress",
-      "cloudwatch:PutMetricData"
-    ]
-
     "cloudwatch" = ["logs:*"]
     "ecstaskexecution" = [
       "ecr:GetAuthorizationToken",
@@ -95,24 +79,7 @@ variable "custom_policy_actions" {
       "lambda:InvokeFunction",
       "lambda:UpdateFunctionConfiguration"
     ]
-    "secretmanager" = [
-      "secretsmanager:*",
-      "cloudformation:CreateChangeSet",
-      "cloudformation:DescribeChangeSet",
-      "cloudformation:DescribeStackResource",
-      "cloudformation:DescribeStacks",
-      "cloudformation:ExecuteChangeSet",
-      "ec2:DescribeSecurityGroups",
-      "ec2:DescribeSubnets",
-      "ec2:DescribeVpcs",
-      "kms:DescribeKey",
-      "kms:ListAliases",
-      "kms:ListKeys",
-      "lambda:ListFunctions",
-      "rds:DescribeDBClusters",
-      "rds:DescribeDBInstances",
-      "tag:GetResources"
-    ]
+  
     "cloudformation" = [
       "serverlessrepo:CreateCloudFormationChangeSet"
     ]

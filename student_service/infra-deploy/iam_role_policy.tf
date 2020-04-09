@@ -6,7 +6,7 @@ data "aws_iam_policy_document" "ec2_assume_role_policy" {
     actions = ["sts:AssumeRole"]
     principals {
       type        = "Service"
-      identifiers = "${var.assume_role_principle["ec2_assume_resources"]}"
+      identifiers = var.assume_role_principle.ec2_assume_resources
     }
     effect = "Allow"
   }
@@ -18,32 +18,41 @@ data "aws_iam_policy_document" "ecs_service_assume_role_policy" {
     actions = ["sts:AssumeRole"]
     principals {
       type        = "Service"
-      identifiers = "${var.assume_role_principle["ecs_assume_resources"]}"
+      identifiers = var.assume_role_principle.ecs_assume_resources
     }
     effect = "Allow"
   }
 }
 
-
 # Custom Policy Document for creating json
 data "aws_iam_policy_document" "custom_policy" {
   statement {
     sid       = "1"
-    actions   = "${var.custom_policy_actions["ssm"]}"
+    actions   = var.custom_policy_actions.ssm
     effect    = "Allow"
-    resources = "${var.custom_policy_resources["ssm"]}"
+    resources = var.custom_policy_resources.ssm
   }
   statement {
     sid       = "2"
-    actions   = "${var.custom_policy_actions["cloudwatch"]}"
+    actions   = var.custom_policy_action.cloudwatch
     effect    = "Allow"
-    resources = "${var.custom_policy_resources["cloudwatch"]}"
+    resources = var.custom_policy_resources.cloudwatch
   }
   statement {
     sid       = "3"
-    actions   = "${var.custom_policy_actions["ecs"]}"
+    actions   = var.custom_policy_actions.ecs
     effect    = "Allow"
-    resources = "${var.custom_policy_resources["ecs"]}"
+    resources = var.custom_policy_resources.ecs
+  }
+}
+
+# Custom Policy Document for creating policy json for ecs_task_role
+data "aws_iam_policy_document" "ecs_task_custom_policy" {
+  statement {
+    sid       = "1"
+    actions   = var.custom_policy_actions.ssm
+    effect    = "Allow"
+    resources = var.custom_policy_resources.ssm
   }
 }
 
@@ -51,49 +60,43 @@ data "aws_iam_policy_document" "custom_policy" {
 data "aws_iam_policy_document" "ecs_task_execution_custom_policy" {
   statement {
     sid       = "1"
-    actions   = "${var.custom_policy_actions["ssm"]}"
+    actions   = var.custom_policy_actions.ssm
     effect    = "Allow"
-    resources = "${var.custom_policy_resources["ssm"]}"
+    resources = var.custom_policy_resources.ssm
   }
 
   statement {
     sid       = "2"
-    actions   = "${var.custom_policy_actions["cloudwatch"]}"
+    actions   = var.custom_policy_action.cloudwatch
     effect    = "Allow"
-    resources = "${var.custom_policy_resources["cloudwatch"]}"
+    resources = var.custom_policy_resources.cloudwatch
   }
+
 
   statement {
     sid       = "3"
-    actions   = "${var.custom_policy_actions["secretmanager"]}"
+    actions   = var.custom_policy_actions.lambda
     effect    = "Allow"
-    resources = "${var.custom_policy_resources["secretmanager"]}"
+    resources = var.custom_policy_resources.lambda
   }
 
   statement {
     sid       = "4"
-    actions   = "${var.custom_policy_actions["lambda"]}"
+    actions   = var.custom_policy_actions.ecstaskexecution
     effect    = "Allow"
-    resources = "${var.custom_policy_resources["lambda"]}"
+    resources = var.custom_policy_resources.ecstaskexecution
   }
-
   statement {
     sid       = "5"
-    actions   = "${var.custom_policy_actions["ecstaskexecution"]}"
+    actions   = var.custom_policy_actions.cloudformation
     effect    = "Allow"
-    resources = "${var.custom_policy_resources["ecstaskexecution"]}"
+    resources = var.custom_policy_resources.cloudformation
   }
   statement {
     sid       = "6"
-    actions   = "${var.custom_policy_actions["cloudformation"]}"
+    actions   = var.custom_policy_actions.s3
     effect    = "Allow"
-    resources = "${var.custom_policy_resources["cloudformation"]}"
-  }
-  statement {
-    sid       = "7"
-    actions   = "${var.custom_policy_actions["s3"]}"
-    effect    = "Allow"
-    resources = "${var.custom_policy_resources["s3"]}"
+    resources = var.custom_policy_resources.s3
   }
 }
 
