@@ -84,19 +84,19 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: login docker
+      - name: Login docker
         run : make docker-login
         env :
           DOCKER_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
           DOCKER_USERNAME: prasanna1994
 
-      - name: Build docker image and push to docker_hub
+      - name: Build docker image
         run : mvn install dockerfile:build
         working-directory: student_service/source-code
         env:
           MASTER_COMMIT_ID: ${{ toJson(github.sha) }}
 
-      - name: push docker image to docker_hub
+      - name: Push docker image to docker_hub
         run : |
           export APP_TAG=`sed -e 's/^"//' -e 's/"$//' <<<"$MASTER_COMMIT_ID" | cut -c1-7`
           make docker-retag-push
@@ -116,7 +116,7 @@ jobs:
       - name: Get the latest terraform version
         run: make terraform-install
 
-      - name: apply terraform
+      - name: Apply terraform
         run: |
           export APP_TAG=`sed -e 's/^"//' -e 's/"$//' <<<"$MASTER_COMMIT_ID" | cut -c1-7` && sed -i -e "s/APP_TAG/$APP_TAG/g" *.tf
           make terraform-apply
