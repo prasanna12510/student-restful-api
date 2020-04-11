@@ -22,7 +22,13 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<docker.image.prefix>prasanna1994</docker.image.prefix>
+		<code.coverage.exclusions>
+			**/com/cloudsre/services/student_service/StudentServiceApplication.java,
+			**/com/cloudsre/services/student_service/domain/**
+		</code.coverage.exclusions>
 	</properties>
+
+	
 
 	<dependencies>
 		<dependency>
@@ -126,9 +132,6 @@
 				<version>1.4.13</version>
 				<configuration>
 					<repository>${docker.image.prefix}/${project.artifactId}</repository>
-					<buildArgs>
-						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
-					</buildArgs>
 					<imageTags>
 						<imageTag>latest</imageTag>
 					</imageTags>
@@ -138,5 +141,47 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>sonar</id>
+			<properties>
+				<sonar.sources>.</sonar.sources>
+				<sonar.inclusions>src/main/java/**,src/main/resources/**</sonar.inclusions>
+				<sonar.exclusions>${code.coverage.exclusions}</sonar.exclusions>
+				<sonar.projectKey>prasanna12510_student-restful-api</sonar.projectKey>
+				<sonar.organization>prasanna12510</sonar.organization>
+				<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+			</properties>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.sonarsource.scanner.maven</groupId>
+						<artifactId>sonar-maven-plugin</artifactId>
+						<version>3.7.0.1746</version>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>sonar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>RESTFUL STUDENT API Using SPRINGBOOT and Terraform on AWS ECS </name>
+			<url>https://maven.pkg.github.com/prasanna12510/student-restful-api</url>
+		</repository>
+	</distributionManagement>
 
 </project>
