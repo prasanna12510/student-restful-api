@@ -42,7 +42,7 @@ public class StudentController {
 	    responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 	    return ResponseEntity.ok()
 	      .headers(responseHeaders)
-	      .body("{\"status\":\"All Students are healthy and OK !!!\"}");
+	      .body("{\"status\":\"All Students are healthy and OK shashank is live!!!\"}");
     }
 	
 	@ApiOperation(value = "View a list of available student", response = List.class)
